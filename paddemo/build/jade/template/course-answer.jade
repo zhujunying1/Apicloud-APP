@@ -1,0 +1,76 @@
+extends ../layout/layout
+block head
+    title 课程问答
+block body
+    .s-head
+        .center
+            .btn-group.btn-success
+                .btn.active(tapmode='active', onclick="set_index(0)") 全部回答
+                .btn(tapmode='active', onclick="set_index(1)") 我的回答
+        ul.right
+            li(tapmode, onclick="showSearchBar('answer_search')")
+                i.icon-search2
+            li(tapmode, onclick="new_answer()")
+                span 提问
+                i.icon-plus
+        include ../modules/search-bar
+
+block scripts
+    script(type='text/javascript').
+        function set_index(a) {
+            api.setFrameGroupIndex({
+                name: 'answerFrameGroup',
+                index: a
+            });
+            $('.btn-group .btn').removeClass('active').eq(a).addClass('active');
+        }
+        function new_answer(){
+            var param = api.pageParam;
+            param.answer = 'course-answer';
+            api.openFrame({
+                name: 'answer-edit',
+                url: 'answer-edit.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth - leftSw,
+                    h: headSh
+                },
+                pageParam:param,
+                bounces: false
+            });
+        }
+
+        apiready = function () {
+            api.addEventListener({
+                name: 'hasAnswerTab'
+            }, function (ret) {
+                $('.btn-group .btn').removeClass('active').eq(ret.value.key1).addClass('active');
+            });
+            api.openFrameGroup({
+                name: 'answerFrameGroup',
+                scrollEnabled: true,
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headSh
+                },
+                index: 0,
+                preload: 1,
+                frames: [{
+                    name: 'course-answer-all',
+                    url: 'course-answer-all.html',
+                    pageParam:api.pageParam
+                }, {
+                    name: 'course-answer-me',
+                    url: 'course-answer-me.html',
+                    pageParam:api.pageParam
+                }]
+            }, function (ret, err) {
+                api.sendEvent({
+                    name: 'hasAnswerTab',
+                    extra: {key1: ret.index}
+                });
+            });
+        };

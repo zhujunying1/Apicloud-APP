@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <title>意见反馈</title>
+    <link rel="stylesheet" type="text/css" href="../css/cckt.css">
+    <style type="text/css">
+      .pop-radios {
+          overflow: hidden;
+          padding: 10px 0;
+          margin-top: 20px;
+      }
+      .pop-radios .pop-radio-label {
+          display: inline-block;
+          float: left;
+          margin-left: 30px
+      }
+      .pop-radios .pop-radio-label .pop-radio {
+          display: inline-block;
+          position: relative;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          border: 1px solid #979797;
+      }
+      .pop-radios .pop-radio-label .pop-radio .pop-radio-round {
+          position: absolute;
+          top: 2px;
+          bottom: 0;
+          left: 2px;
+          right: 0;
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #fff
+      }
+      .pop-radios .pop-radio-label .pop-radio-span {
+          display: inline-block;
+          color: #4A4A4A;
+          font-size: 16px
+      }
+      .pop-radios .pop-radio-label.active .pop-radio .pop-radio-round {
+        background-color: #F5A623
+      }
+      .pop-textarea-content {
+          width: initial;
+          height: 195px;
+          border: 1px solid #E4E4E4;
+          padding: 20px;
+          margin: 0 20px;
+          background-color: #fff
+      }
+      .pop-tel {
+          width: 50%;
+          height: 100%;
+          float: left;
+          color: #3E4E63;
+          margin-left: 0.25rem;
+          margin-top:10px;
+      }
+      .pop-tel .pop-input-tel {
+          width: 180px;
+          height: 28px;
+          border: 1px solid #E4E4E4;
+          padding: 10px;
+          outline: none;
+          font-size: 12px;
+          margin-left: 10px;
+          background-color: #fff
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mask">
+      <div class="setup">
+        <!--头部-->
+        <div class="setup_header clearfix">
+          <div tapmode onclick="lx()" class="header_l icon-arrow-left"></div>
+          <div tapmode onclick="sub()" class="header_r send">发送</div>
+          <div class="header_c">您的意见我会虚心接受的</div>
+        </div>
+        <div id="pop-radios" class="pop-radios"><a href="javascript:;" class="pop-radio-label active"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">视频课程问题</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">学习中心问题</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">试题报错</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">新版建议</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">投诉学服</span></a></div>
+        <!--内容区-->
+        <div class="input-txt">
+          <textarea name="content" placeholder="亲爱的同学：小财非常欢迎你向小财反馈产品的意见建议和体验感受。我们一定会认真调整，及时反馈。根据你的建议，不断完善和优化我们的产品，为你提供更舒适的学习体验。"></textarea>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript">| //联系方式</script>
+  </body>
+</html>

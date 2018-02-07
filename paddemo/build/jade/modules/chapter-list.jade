@@ -1,0 +1,30 @@
+ul.list-group.accordion.chapter-list#chaList
+    -var aM = ['PART A Business organisational star','PART C Business organisational star and flruk']
+    each vM,i in aM
+        li(class= i == 0 ? 'open' : '')
+            .title.list-toggle
+                i.icon-arrow-down
+                span=vM
+            ul.list-group.list-liebiao
+                -var aN = ['Organisation and Types of Organisation','Types of Business Organisation','Business Models','Function of Main Departments in Business Organisation','Informal Business Organisation','Informal Business Organisation']
+                each vN,ind in aN
+                    li
+                        .li-left
+                            .circle_btn
+                                .active_btn.hide
+                            span Chapter #{ind} - #{vN}
+                        .li-right
+                            dl.console
+                                dd
+                                    i.icon-edit2
+                                    span.multiples 2
+                                dd
+                                    i.icon-play
+                                    span.multiples 2
+                                dd
+                                    i.icon-word-card
+                                    span.multiples 2
+                                dd
+                                    span.hc_download 已下载
+
+

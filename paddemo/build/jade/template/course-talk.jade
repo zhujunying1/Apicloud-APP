@@ -1,0 +1,91 @@
+extends ../layout/layout
+block head
+    title 课程讨论
+block body
+    .s-head
+        .left(tapmode, onclick="talk_sort()")
+            i.icon-arrow-down
+            span.reply_new 最新回复
+        ul.right
+            li(tapmode, onclick="showSearchBar('talk_search')")
+                i.icon-search
+                span 搜索
+            li(tapmode, onclick="open_talk()")
+                i.icon-comments2
+                span 我的讨论
+            //li(tapmode, onclick="new_talk('talk-edit','small-h','','','course-talk')")
+            li(tapmode, onclick="new_talk()")
+                span 新建
+                i.icon-plus
+        include ../modules/search-bar
+block scripts
+    script(type='text/javascript').
+        function open_talk(){
+            api.openFrame({
+                delay:200,
+                name: 'course-talk-me',
+                url: 'course-talk-me.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth  - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam:{courseId:$api.getStorage('Course_info').courseId},
+                bounces: false
+            });
+        }
+        function new_talk(){
+            api.openFrame({
+                delay:200,
+                name: 'course-talk-edit',
+                url: 'course-talk-edit.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth  - leftSw,
+                    h: headLh
+                },
+                pageParam:api.pageParam,
+                bounces: false
+            });
+        }
+        apiready = function (){
+            api.addEventListener({
+                name:'close_sort'
+            },function(ret){
+                var value=ret.value;
+                var sort_name=value.sort_name;
+                $('.reply_new').html(sort_name);
+            });
+            //myFrame('course-talk-f', 'small', true);
+            api.openFrame({
+                delay:200,
+                name: 'course-talk-f',
+                url: 'course-talk-f.html',
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth  - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam:api.pageParam
+            });
+        };
+        function talk_sort(){
+            api.openFrame({
+                name: 'talk-sort',
+                url: 'talk-sort.html',
+                bgColor: 'rgba(0,0,0,0)',
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth  - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam: {typ:1},
+                bounces: false,
+                delay:200,
+                reload:false
+            });
+        }

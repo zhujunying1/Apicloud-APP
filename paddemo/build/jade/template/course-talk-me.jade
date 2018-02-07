@@ -1,0 +1,48 @@
+extends ../layout/layout
+block head
+    title 课程讨论-我的讨论
+block body
+    .s-head
+        .left
+            i.icon-back(tapmode,onclick="closeMe()")
+        .center 我的讨论
+        ul.right
+            li(tapmode, onclick="showSearchBar('talk_search_m')")
+                i.icon-search
+                span 搜索
+            li(tapmode, onclick="open_new()")
+                span 新建
+                i.icon-plus
+        include ../modules/search-bar
+block scripts
+    script(type='text/javascript').
+        function closeMe() {
+            api.closeFrame({
+                name: 'course-talk-me-f'
+            });
+            api.closeFrame();
+        }
+        //myFrame('course-talk-edit','small-h','','','course-talk')
+        function open_new(){
+            api.openFrame({
+                delay:200,
+                name: 'course-talk-edit',
+                url: 'course-talk-edit.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam: api.pageParam,
+                bounces: false
+            });
+        }
+        apiready = function () {
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                closeMe();
+            });
+            myFrame('course-talk-me-f','small',true);
+        };

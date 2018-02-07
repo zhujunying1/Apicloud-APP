@@ -1,0 +1,40 @@
+extends ../layout/layout
+block body
+    #header.header.header-black
+        .left(onclick='api.closeWin()', tapmode='')
+            i.icon-arrow-left
+        .left-txt
+            | 基本信息
+        .right
+            | 2/2
+block scripts
+    script(type='text/javascript').
+        apiready = function() {
+            api.setStatusBarStyle({
+                style: 'light'
+            });
+            api.addEventListener({
+                name: 'keyback'
+            }, function (ret, err) {
+            });
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            var headerPos = $api.offset(header);
+            var width = api.winWidth;
+            var height = api.winHeight - headerPos.h;
+            api.openFrame({
+                name : 'sign-edit-f',
+                url : 'sign-edit-f.html',
+                bounces : false,
+                opaque : true,
+                reload : true,
+                vScrollBarEnabled : false,
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                },
+                pageParam: api.pageParam
+            });
+        };

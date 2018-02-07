@@ -1,0 +1,251 @@
+.about-video
+    position absolute
+    right 0
+    height 100%
+    width 50%
+    background-color rgba(0,0,0,.85)
+    overflow-y hidden
+.video-body
+    overflow-x hidden
+    overflow-y auto
+    position absolute
+    z-index 1
+    top 1.3rem
+    right 0
+    bottom 0
+    left 0
+.video-title
+    padding 0.2rem 0
+    position relative
+    z-index 10
+    ul
+        width 78%
+        height 0.56rem
+        border-radius 0.13rem
+        border 1px solid #999
+        line-height 0.56rem
+        position relative
+        margin 0.2rem auto
+        display table
+        li
+            list-style none
+            font-size 0.26rem
+            color #999999
+            display table-cell
+            width 25%
+            text-align center
+            height 0.56rem
+            border-right 1px solid #999
+            &:nth-child(1)
+                border-radius .1rem 0 0 .1rem
+            &:nth-child(4)
+                border-radius 0 .1rem .1rem 0
+                border-right none
+        .vList-selected
+            background-color #999
+            color #fff
+
+.videonotes
+    background #fff
+    .video-title
+        ul
+            width 50%
+            margin-top 0
+            border 1px solid #00a185
+            li
+                width 50%
+                color #00a185
+                border-right 1px solid #00a185
+                &:last-child
+                    border-right none
+                    position absolute
+                    right 0
+            .vList-selected
+                background #00a185
+                color #fff
+.about-video-content
+    overflow scroll
+    height 100%
+    padding-bottom 1.8rem
+    ul
+        li
+            position relative
+            width 100%
+            //border-top 1px solid #606160
+            &.video-catego
+                height 1.6rem
+            &.note-catego
+                height 1.6rem
+            &.out-li
+                border-bottom 1px solid #606160
+            .li-right
+                float right
+                line-height 1rem
+            .li-left
+                line-height: 1rem
+                height 1.2rem
+                padding 0.05rem 0.3rem 0 0.5rem
+                >span
+                    width 60%
+                    white-space nowrap
+                    overflow hidden
+                    text-overflow ellipsis
+.chapter-list
+    li
+        font-size 0.3rem
+        color #fff
+    .title
+        line-height 120%
+        padding .4rem .2rem .4rem .3rem
+        overflow hidden
+        i
+            margin-top .05rem
+            float left
+        span
+            width 80%
+            float left
+    .child-list
+        li
+
+            line-height 1.2rem
+            position relative
+            white-space nowrap
+            border-top 1px solid rgba(250,250,250,.1)
+            .s-title
+                width 90%
+                display block
+                text-overflow ellipsis
+                overflow hidden
+                padding-left .6rem
+                opacity .7
+            i
+                color #fff
+            .li-left
+                display block
+                margin 0
+                width 100%
+
+        .li-right
+            position absolute
+            right 0
+            top 0
+            padding .1rem .2rem
+            white-space nowrap
+            .console
+                margin 0
+                height 1.2rem
+                color #fff !important
+                background none
+                dd
+                    display inline-block
+                    margin 0 0 0 0.3rem
+
+        .li-left2
+            background #00a185
+
+.open
+    .icon-arrow-right
+        &::before
+            content '\e907'
+
+
+//html
+//    font-size 40px !important
+
+.chapter-task
+    ul
+        margin-top 0.2rem
+        float left
+        width 100%
+    li
+        font-size 0.3rem
+        color #fff
+        height 1.2rem
+        line-height 1.2rem
+        padding-left 0.3rem
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        position relative
+        & > span
+            position absolute
+            left 5%
+            top 50%
+            -webkit-transform translateY(-50%)
+            height 0.72rem
+            width 0.72rem
+            display inline-block
+        & > div
+            display inline-block
+            width 80%
+            position absolute
+            left 10%
+            top 50%
+            -webkit-transform translateY(-50%)
+            height 0.7rem
+        p
+            width 100%
+            font-size 0.26rem
+            line-height 0.5rem
+            position relative
+            span
+                color #fff
+        .v-name
+            .span11
+                overflow hidden
+                text-overflow ellipsis
+                white-space nowrap
+                width 7rem
+            span
+                &:nth-child(1)
+                    position absolute
+                    left 0
+                &:nth-child(2)
+                    position absolute
+                    right 0
+        .v-progress
+            height 0.1rem
+            width 100%
+            border-radius 0.08rem
+            background-color #999999
+            position absolute
+            bottom 0.05rem
+            span
+                height 0.1rem
+                background-color #00a085
+                position absolute
+                display block
+                width 0%
+                border-radius 0.08rem
+    .video-catego  > span
+            background url("../image/video-play-black.png") no-repeat
+            background-size 100% 100%
+    .note-catego  > span
+            background url("../image/video-edit-black.png") no-repeat
+            background-size 100% 100%
+    .courseware-catego  > span
+            background url("../image/video-chapter-balck.png") no-repeat
+            background-size 100% 100%
+.chapter-appendix
+    .appendix-p  > span
+            background url("../image/appendix-p.png") no-repeat
+            background-size 100% 100%
+    .appendix-w  > span
+            background url("../image/appendix-w.png") no-repeat
+            background-size 100% 100%
+    .appendix-zip  > span
+            background url("../image/appendix-zip.png") no-repeat
+            background-size 100% 100%
+    .appendix-pdf > span
+            background url("../image/appendix-pdf.png") no-repeat
+            background-size 100% 100%
+    li
+        .v-data
+            height 0.28rem
+            width 100%
+            position absolute
+            bottom 0
+            span
+                font-size 0.26rem
+                &:nth-child(2)
+                    margin-left 0.3rem

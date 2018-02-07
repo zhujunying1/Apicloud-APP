@@ -1,0 +1,24 @@
+extends ../../layout/layout
+block head
+    title 设置
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    .info_box
+        .i_main
+            ul.no_activate.cl.hide
+                -for(var i =0; i<3; i++)
+                    li
+                        .class_icon
+                            i.icon-img-bg
+                            .update_time 2014-01-20
+                            .updata_class
+                        .class_name ACCA F1标准课
+                        .class_intro 未学习
+                        .teacher_intro
+                            .icon-img-bg
+                            .teacher_con
+                                .teach_name 佟云云
+                                .teacher_position 哈佛认证资深讲师
+                        .atonce_btn
+                            .at_activate 马上激活
+                                .activate_icon

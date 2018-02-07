@@ -1,0 +1,131 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'video-right'
+block head
+    title 课程笔记-我的笔记
+block body
+    include ../modules/note-list
+block scripts
+    script(type="text/javascript").
+
+        function to_detail_top(e) {
+            var param = api.pageParam;
+            param.id = $(e).attr('data-id');
+            param.memberId = $(e).attr('data-uid');
+            param.isPublic = $(e).attr('isPub');
+            param.courseId = $(e).attr('data-key');
+            param.taskProgress=isEmpty($(e).attr('taskprogress')) ? 0 : $(e).attr('taskprogress');
+            param.taskType=isEmpty($(e).attr('taskType')) ? '' : $(e).attr('taskType');
+            param.taskId=isEmpty($(e).attr('taskId')) ? '' : $(e).attr('taskId');
+            if(isEmpty($(e).attr('charpterid')) || $(e).attr('charpterid') == 'undefined'){
+                if(isEmpty(api.pageParam.charpterid)){
+                    param.charpterid = 'charpterid';
+                }
+            }else{
+                param.charpterid = $(e).attr('charpterid');
+            }
+            api.openFrame({
+                delay:200,
+                name: 'video-note-detail',
+                url: 'video-note-detail.html',
+                rect: {
+                    x: api.winWidth / 2,
+                    y: 0,
+                    w: api.winWidth / 2,
+                    h: headLh
+                },
+                pageParam: param,
+                bounces: false
+            });
+        }
+        var pageSize = 10;
+        function getData(page) {
+            var param = {};
+            param.pageSize = pageSize;
+            param.pageNo = page;
+            param.courseid = api.pageParam.courseId;
+            param.categoryId = $api.getStorage('Course_info').categoryId;
+            param.subjectId = $api.getStorage('Course_info').subjectId;
+            param.ordertype = 1;
+            param.self = 1;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/studytools/nodelist/v2.1', 'get', param, function (ret, err) {//003.113.1
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                var tpl = $('#tpl1').html();
+                var content = doT.template(tpl);
+                if (ret && ret.state == 'success') {
+                    no_loaded=false;
+                    total = ret.totalCount;
+                    if (page == 1) {
+                        if(isEmpty(ret.data)||total==0){
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('#content').html(content(ret.data));
+                        $('body').removeClass('null');
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                    audioDom();
+                    api.parseTapmode();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+        var total = 0;
+        var no_loaded=true;
+        apiready = function () {
+            getData(1);
+            var currentPage = 1;
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                getData(1);
+                currentPage = 1;
+            });
+            //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (currentPage < Math.ceil(total / pageSize)) {
+                    currentPage++;
+                    getData(currentPage);
+                }
+                else {
+                    api.toast({
+                        msg: '加载完毕'
+                    });
+                }
+            });
+            api.addEventListener({
+                name: 'chapter-notes-f'
+            }, function (ret) {
+                getData(1);
+            });
+        };

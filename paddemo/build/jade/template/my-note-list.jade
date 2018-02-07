@@ -1,0 +1,87 @@
+extends ../layout/layout
+block head
+    title 我的笔记-笔记列表头部
+block body
+    .header.header-white#header
+        .left(tapmode, onclick="closeMyNote()")
+            i.icon-arrow-left
+            span 章节列表
+        .center
+            b
+        .right(tapmode, onclick="open_next()")
+            span 新建
+            i.icon-plus
+block scripts
+    script(type="text/javascript").
+        function open_next(){
+            api.openFrame({
+                delay:200,
+                name: 'my-note-edit',
+                url:  'my-note-edit.html',
+                bgColor: '#fff',
+                rect: {
+                    x: leftLw,
+                    y: 0,
+                    w: api.winWidth - leftLw,
+                    h: headLh
+                },
+                pageParam:api.pageParam,
+                bounces:false
+            });
+        }
+        function closeMyNote(){
+            api.setFrameGroupAttr({
+                name : 'homeFrameGroup',
+                hidden : false
+            });
+            var jsfun = 'getData(1);';
+            api.execScript({
+                name: 'root',
+                frameName: 'my-note',
+                script: jsfun
+            });
+            api.sendEvent({
+                name: 'closeFrameAll'
+            });
+            api.closeFrame({
+                name: 'my-note-list-f'
+            });
+            api.closeFrame();
+        }
+        apiready = function(){
+            $api.rmStorage('content');
+            $api.rmStorage('img');
+            $api.rmStorage('lx_duration');
+            $api.rmStorage('soundPath');
+            $api.rmStorage('isPublic');
+            $api.rmStorage('lx_lens');
+            $api.rmStorage('lx_soundPath');
+            $('.center b').html(api.pageParam.title);
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+                api.openFrame({
+                    delay:200,
+                    name: 'my-note-list-f',
+                    url:  'my-note-list-f.html',
+                    bgColor: '#fff',
+                    rect: {
+                        x: leftLw,
+                        y: headLh,
+                        w: api.winWidth - leftLw,
+                        h: api.winHeight - headLh
+                    },
+                    reload: true,
+                    pageParam:api.pageParam,
+                    bounces:true
+                });
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                api.closeFrame({
+                    name: 'my-note-list-f'
+                 });
+                api.closeFrame();
+            });
+
+        };
+

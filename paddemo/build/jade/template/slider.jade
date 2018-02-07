@@ -1,0 +1,41 @@
+
+extends ../layout/layout
+block html
+    -var htmlclass = 'slider'
+block body
+    .slider-menu
+        img.avatar(src="../image/touxiang.png")
+        ul
+            -var vM = ['学习中心','在线课程','我的笔记','我的问答','我的讨论','缓存课程']
+            -var vN = ['dashboard','course','edit3','question','comments2','download2']
+            each aM,i in vM
+                li(tapmode="active", onclick="set_index(#{i})", class= i == 0 ? 'active' : '')
+                    i.icon(class='icon-' + vN[i])
+                    p!=aM
+            li(tapmode, onclick="set_info()")
+                i.icon-cog
+                p 设置
+block scripts
+    script(type='text/javascript').
+        function set_index(a) {
+            api.sendEvent({
+                name: 'hashomepage',
+                extra: {sethomepage: a}
+            });
+            $('.slider-menu ul li').removeClass().eq(a).addClass('active');
+        }
+        function set_info(b) {
+            api.sendEvent({
+                name: 'hashomeset',
+                extra: {sethomeset: b}
+            });
+        }
+        apiready = function () {
+
+            var headimg = get_loc_val('mine', 'avatar');
+            if (headimg) {
+                headimg = static_url + headimg;
+                $('.avatar').attr('src', headimg);
+            }
+        };
+

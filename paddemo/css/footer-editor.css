@@ -1,0 +1,323 @@
+.editor-page {
+  overflow: hidden;
+}
+.editor-bar {
+  position: fixed;
+  font-size: 0.48rem;
+  color: #00a185;
+  width: 100%;
+  background: #fff;
+  box-shadow: inset 0 1px 0 #eee;
+  left: 0;
+  bottom: 0;
+  z-index: 3;
+}
+.editor-bar .switch {
+  height: 0.42rem;
+  border-radius: 0.2rem;
+  padding: 0.02rem;
+  color: #fff;
+  font-size: 0.2rem;
+  top: 0.4rem;
+  right: 0.3rem;
+  position: absolute;
+  background: #cfcfcf;
+}
+.editor-bar .switch p {
+  float: right;
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: #fff;
+}
+.editor-bar .switch span {
+  font-size: 0.2rem;
+  float: left;
+  line-height: 0.4rem;
+  padding: 0 0.1rem;
+}
+.editor-bar .switch .switchp1 {
+  float: left;
+}
+.editor-bar .switch .switchpsp {
+  float: right;
+}
+.editor-bar .switch[num="0"] {
+  background: #00a185;
+}
+.editor-bar .editor-tool {
+  position: relative;
+  padding: 0.3rem 1.7rem 0.3rem 1.6rem;
+  height: 1.25rem;
+  display: block;
+}
+.editor-bar .editor-tool i,
+.editor-bar .editor-tool .btn {
+  position: absolute;
+  line-height: 0.6rem;
+  top: 0.3rem;
+}
+.editor-bar .editor-tool i {
+  padding: 0 0.1rem;
+}
+.editor-bar .editor-tool .icon-cut,
+.editor-bar .editor-tool .switch {
+  display: none;
+}
+.editor-bar .editor-tool .btn {
+  right: 0.05rem;
+  padding: 0 0.3rem;
+}
+.editor-bar .editor-tool .textarea {
+  position: relative;
+  left: 0.2rem;
+  border: 1px solid #eee;
+  border-radius: 0.1rem;
+  height: 0.6rem;
+  padding: 0.1rem;
+  width: 97%;
+  font-size: 0.22rem;
+  display: block;
+  margin: 0;
+  color: #666;
+  resize: none;
+  outline: none;
+  -webkit-appearance: none !important;
+}
+.editor-bar[type='1'] .icon-recording-o {
+  left: 0.9rem;
+}
+.editor-bar[type='1'] .icon-picture2 {
+  left: 0.2rem;
+}
+.editor-bar[type='1'] .editor-tool .btn,
+.editor-bar[type='1'] .editor-tool i,
+.editor-bar[type='1'] .editor-tool .textarea {
+  display: none;
+}
+.editor-bar[type='2'] .textarea,
+.editor-bar[type='2'] .btn {
+  display: none;
+}
+.editor-bar[type='2'] .editor-tool .icon-recording-o {
+  right: 1.2rem;
+  display: block;
+}
+.editor-bar[type='2'] .editor-tool .icon-picture2 {
+  right: 0.2rem;
+  display: block;
+}
+.editor-bar[type='3'] .icon-picture2 {
+  right: 1.8rem;
+  display: block;
+}
+.editor-bar[type='3'] .icon-recording-o {
+  right: 2.8rem;
+  display: block;
+}
+.editor-bar[type='3'] .editor-tool .switch {
+  display: block;
+}
+.editor-bar[type='3'] .editor-tool .btn,
+.editor-bar[type='3'] .editor-tool .textarea {
+  display: none;
+}
+.editor-bar[hasimg="1"] .icon-picture2:after,
+.editor-bar[hasaud="1"] .icon-recording-o:after {
+  content: '';
+  position: absolute;
+  width: 0.15rem;
+  height: 0.15rem;
+  background: #f30;
+  border-radius: 50%;
+  margin-left: -0.1rem;
+}
+.note-edit .editor-bar[type='2'] .icon-picture2 {
+  right: 1.8rem;
+  display: block;
+}
+.note-edit .editor-bar[type='2'] .icon-recording-o {
+  right: 2.8rem;
+  display: block;
+}
+.note-edit .editor-bar[type='2'] .editor-tool .switch {
+  display: block;
+}
+.editor-bar .editor-tool .btn,
+.editor-bar .editor-tool i,
+.editor-bar .editor-tool .textarea {
+  display: none;
+}
+.newaudio,
+.newimg {
+  padding: 0.5rem;
+  display: none;
+  height: 3.7rem;
+  background: #f5f5f5;
+}
+.newimg {
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 0 0.3rem 0 0.3rem;
+}
+.newimg > p {
+  padding-top: 0.3rem;
+  color: #999;
+  font-size: 0.24rem;
+  position: absolute;
+}
+.adchimg {
+  white-space: nowrap;
+  margin: 0.7rem 0 0 0;
+  padding-top: 0.2rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.adchimg .checkimg,
+.adchimg .addimg {
+  width: 3.3rem;
+  height: 2.5rem;
+  display: inline-block;
+  margin-right: 0.2rem;
+  text-align: center;
+  vertical-align: top;
+}
+.adchimg .checkimg {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid #e5e5e5;
+}
+.adchimg .checkimg i {
+  position: absolute;
+  top: -0.1rem;
+  right: -0.1rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  line-height: 0.4rem;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 0.24rem;
+  color: #fff;
+  background: $color_green;
+  border: 1px solid #fff;
+}
+.adchimg .addimg {
+  border: 2px dashed #e0e0e0;
+  color: #fff;
+  text-align: center;
+  position: relative;
+}
+.adchimg .addimg i {
+  width: 1rem;
+  height: 1rem;
+  background: #ddd;
+  border-radius: 50%;
+  padding: 0.3rem;
+  top: 50%;
+  left: 50%;
+  margin: -0.5rem 0 0 -0.5rem;
+  position: absolute;
+}
+.voice_wz {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.5rem;
+}
+.newaudio {
+  text-align: center;
+}
+.newaudio .audio {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0 auto;
+  z-index: 100000;
+}
+.newaudio .audio i {
+  background: #ccc;
+  color: #fff;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.6rem !important;
+  line-height: 2rem;
+  border-radius: 50%;
+}
+.newaudio .audio i.icon-play {
+  font-size: 1.2rem !important;
+  background: $color_green;
+  display: none;
+}
+.newaudio .audio.ing .icon-recording {
+  background: $color_green;
+}
+.newaudio .audio.end .icon-play {
+  display: inline-block;
+}
+.newaudio .audio.end .icon-play.play::before {
+  content: '\e95f';
+  font-size: 2rem !important;
+}
+.newaudio .newaut {
+  font-size: 0.24rem;
+  color: #00a185;
+  margin: 0.9rem 0 0 25%;
+}
+.newaudio .newtip,
+.newaudio button,
+.newaudio .newaut {
+  position: absolute;
+  top: 2.8rem;
+  left: 45%;
+}
+.newaudio .newtip {
+  left: 60%;
+  margin-left: -35%;
+  color: #00a185;
+  font-size: 0.6rem;
+}
+.newaudio .newtip:after {
+  content: '"';
+  margin-left: 0.1rem;
+}
+.newaudio button {
+  right: 0;
+  margin-left: 25%;
+  width: 1.5rem;
+  height: 0.65rem;
+  outline: none;
+  border: 1px solid #b5afaf;
+  font-size: 0.36rem;
+  border-radius: 0.1rem;
+  background: #f5f5f5;
+  z-index: 100000;
+  color: #00a185;
+}
+.newaudio .voice-player {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0.3rem;
+}
+.set-photo {
+  position: absolute;
+  font-size: 0.3rem;
+  width: 6rem;
+  background: #fff;
+  border-radius: 0.18rem;
+  top: 50%;
+  left: 50%;
+  margin: -2rem 0 0 -3rem;
+  color: #666;
+  z-index: 1000;
+  display: none;
+}
+.set-photo li {
+  padding: 0.3rem;
+  border-top: 1px solid #eee;
+}
+.set-photo li:first-child {
+  text-align: center;
+  padding: 0.4rem;
+  border-top: 0;
+}

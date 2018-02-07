@@ -1,0 +1,11 @@
+extends ../layout/layout
+block head
+    title 课程章节
+block body
+    div(style="opacity:.0001; position: absolute; top: 50%;z-index:-1")
+        #svgDown.down-progress
+            .val 2
+    #content
+    include ../modules/_course-list
+block scripts
+    script(type='text/javascript', src='../script/pagejs/course-list.js')

@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/common-component.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <link rel="stylesheet" href="../css/Sstyle.css">
+    <style>
+    	#header{background: #fff;color:#000;}
+        .header{color:#000;border-bottom: 1px solid #d4d4d4;}
+        .header .left:after{display: none;}
+        .icon-arrow-left{color:#00a186;font-weight: bold;}
+        .header .left-next {
+            font-size: 0.36rem;
+            padding-left: 1rem;
+            max-width:80%; 
+            overflow: hidden;
+            word-wrap: normal;
+            text-overflow: ellipsis;
+            float: none;
+            white-space: pre;
+        }
+        .header .message-bells {
+            height: 1.2rem;
+		    width: 1rem;
+		    line-height: 1;
+		    position: absolute;
+		    bottom: 0;
+		    padding: 0 0.3rem;
+		    right: 0.16rem;
+        }
+        .header .message-bells i {
+          font-size: 0.36rem;
+          color: #666;
+          position: absolute;
+          right: 0.22rem;
+          top: 0.6rem;
+        }
+        .header .msg-mark {
+	
+    		    top: 0.45rem;
+    		}
+        .styProul{
+            width:100%;
+            height: 2.3rem;
+            padding:0.25rem 0;
+        }
+        .styProul li{
+          width: 100%;
+          padding: 0 0.35rem;
+        }
+        .styProul li p{
+            float: left;
+            font-size: 0.26rem;
+            font-weight: bold;
+            color:#fff;
+        }
+        .styProul .styprogress{
+            height: 0.5rem;
+        }
+        .styProul .styprogress p:nth-child(2){
+            float: right;
+            font-weight: normal;
+        }
+        .styProul li .v-progress {
+          height: 0.1rem;
+          width: 100%;
+          border-radius: 0.08rem;
+          background-color: #a9e1e1;
+        
+        }
+        .styProul li .v-progress span {
+          height: 0.1rem;
+          background-color: #fff;
+          display: block;
+          width: 0%;
+          border-radius: 0.08rem;
+          transition: width 1s;
+          -moz-transition: width 1s; /* Firefox */
+          -webkit-transition: width 1s;  /* Safari 和 Chrome */
+          -o-transition: width 1s; /* Opera */
+        }
+        .styProul .styLine{
+            height: 0.26rem;
+        }
+        .styProul .styInfo{
+            padding:none;
+            height: 0.7rem;
+            border-bottom: 1px solid #fff;
+        }
+        .styProul .styInfo .version{
+            float:right;
+            width: 1.54rem;
+            height: 0.44rem;
+            text-align:center;
+            line-height: 0.4rem;
+            color:#00a185;
+            background: #fff;
+            border-radius:5px;
+            border: 2px solid #49a2ac;
+        }
+        
+    </style>
+  </head>
+  <body>
+    <div class="styHeight">
+    	<div id="header" class="header">
+	      <div tapmode onclick="my_close()" class="left back"><i class="icon-arrow-left"></i></div>
+	      <div class="left-next"></div>
+	      <div tapmode onclick="go_next('message-center')" class="message-bells"><i class="icon-message"></i>
+            <div class="msg-mark msg-num ri_h"></div>
+          </div>
+	    </div>   
+      <div class="styPro clearfix" style="height: 2.56rem;">
+        <ul class="styProul">
+          <li class="styprogress">
+              <p>学习进度&nbsp;&nbsp;&nbsp;<span class="styNum">0%</span></p>
+              <p class="expirationTime"></p>
+          </li>
+          <li class="styLine">
+              <p class="v-progress"><span style="font-size: 0;" class=""></span></p>
+          </li>
+          <li class="styInfo">
+            <p>章节&nbsp;&nbsp;<span class="chapters"></span></p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;任务&nbsp;&nbsp;<span class="tasks"></span></p>
+            <p class="version" tapmode onclick="myFrame()">课程版本</p>              
+          </li>
+          <li class="startSty">
+              <p onclick="play()" tapmode style="overflow:hidden;text-overflow:ellipsis;text-align: initial;background: none;font-weight:normal;line-height: 0.96rem;" class="styContinue"><span style="overflow:hidden;text-overflow:ellipsis;width:95%;margin-left: 0;"></span></p>
+          </li>
+        </ul>
+      </div>
+      <div tapmode onclick="openMessage(this)" class="courseMessage" style="width: 100%;height: 0.6rem;font-size:0.24rem;color:#999999;line-height: 0.6rem;padding-left: 0.4rem;background: #fff;"><img src="../image/voice.png" style="width: 0.3rem;height: 0.28rem;margin:0.16rem 0.1rem 0 0"><span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 88%;display: inline-block;">暂无课程通知</span></div>
+      <ul class="catanav">
+        <li tapmode><img src="../image/z_icon1.png">目录</li>
+ 		    <li tapmode><img src="../image/c_icon2.png">交流</li>
+        <li tapmode><img src="../image/c_icon3.png">笔记</li>
+        <!--<li tapmode><img src="../image/c_icon4.png">讨论</li>-->
+      </ul>
+    </div>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script src="../script/fx.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+      var versionInfo; 
+      var availability;
+            // 打开自定义Frame(打开,尺寸,弹动,点击的当前对象,来自)
+      function myFrame(){
+          var param={};
+          param.versionInfo = versionInfo;
+          param.versionId = api.pageParam.versionId;
+          param.courseId = api.pageParam.courseId;
+          var reload=false;
+          var mx, my, mh;
+              mx = 0;
+              my = 0;
+              mh = "auto";
+          bgCor = 'rgba(0,0,0,0)';    
+          api.openFrame({
+              name: "version-info",
+              url: 'version-info.html',
+              bgColor : bgCor,
+              rect: {
+                  x: mx,
+                  y: my,
+                  w: api.winWidth  - mx,
+                  h: mh
+              },
+              pageParam:param,
+              bounces: false,
+              delay:200,
+              reload:true
+          });
+      }
+      function openMessage(obj){
+          if($(obj).hasClass("active")){
+              var pageParams = {};
+              pageParams.sender = "课程通知";
+              pageParams.title = ""
+              pageParams.content = availability;
+
+              api.openWin({
+                  name: "announce-detail",
+                  url: "announce-detail.html",
+                  delay: 200,
+                  slidBackEnabled: false,//iOS7.0及以上系统中，禁止通过左右滑动返回上一个页面
+                  pageParam: pageParams
+              });
+          }
+          
+      }
+      function my_close() {
+          api.sendEvent({
+              name: 'flush_study'
+          });
+          if (!isEmpty($api.getStorage('studying_to_center')) && $api.getStorage('studying_to_center') == 1) {
+              api.setStatusBarStyle({
+                  style: 'dark'
+              });
+              $api.rmStorage('studying_to_center');
+          } else {
+              api.setStatusBarStyle({
+                  style: 'dark'
+              });
+          }
+          api.closeWin();
+      }
+      function more(link) {
+          api.openWin({
+              name: link,
+              url: link + '.html',
+              bgColor: '#000',
+              opaque: true,
+              reload: true,
+              softInputMode: 'resize',
+              pageParam: {tag: 1},
+              vScrollBarEnabled: false
+          });
+      }
+      function get_tasks() {
+          var param = {};
+          param.courseId = api.pageParam.courseId;
+          param.token = getstor('token');
+          param.memberId = getstor('memberId');
+          ajaxRequest({ 'origin': 'http://action.caicui.com/', 'pathname': 'api/userAction/course/getCourseProgress/v1.0/' }, 'get', param, function(ret, err) {
+          //ajaxRequest('api/v2.1/study/getFinish', 'get', param, function (ret, err) {//008.021.1
+              if (err) {
+                  api.toast({ 
+                      msg: err.msg,
+                      location: 'middle'
+                  });
+                  return false;
+              }
+              if (ret && ret.state == 'success') {
+                  var uid = getstor('memberId');
+                  var cid = api.pageParam.courseId;
+                  var time1 = Date.now();
+                  var data = isEmpty($api.getStorage(cid + '-' + uid)) ? '' : $api.getStorage(cid + '-' + uid);
+                  if (data && time1 - data['time'] < course_detail_expire) {
+                      var res1 = ret.data[0];
+                      var res2 = data['data'][0];
+                      top_task(res1, res2);
+                      //circleProgress();
+                  } else {
+                      var param = {};
+                      param.courseId = api.pageParam.courseId;
+                      ajaxRequest('api/teachsource/course/courseDetail', 'get', param, function (rets, errs) {
+                          if (errs) {
+                             /*api.toast({
+                                  msg: errs.msg,
+                                  location: 'middle'
+                              });*/
+                              return false;
+                          }
+                          if (rets && rets.state == 'success') {
+                              var res1 = ret.data[0];// $('input[name=data1]').val();
+                              var res2 = rets.data[0];// $('input[name=data2]').val();
+                              top_task(res1, res2);
+                              var time_now = Date.now();
+                              var data = {'time': time_now, 'data': rets.data};
+                              //circleProgress();
+                              $api.setStorage(cid + '-' + uid, data);
+                          }
+                          /*else {
+                           api.toast({
+                           msg: rets.msg,
+                           location: 'middle'
+                           });
+                           }*/
+                      });
+                  }
+              }
+              /*else {
+               api.toast({
+               msg: ret.msg,
+               location: 'middle'
+               });
+               }*/
+          });
+      }
+      function top_task(res1, res2) {
+          var m1, m2, n1, n2, progress;
+          if (isEmpty(res1)) {
+              m1 = 0;
+              m2 = 0;
+              $('.styNum').html("0%");
+              $(".v-progress").find("span").css({"width":"0%"});
+
+              $('.styContinue span').html('开始学习此课程');
+
+          } else {
+              var data1 = res1;
+              //                m1=data1.charperSum;
+              //                m2=data1.progressSum;
+              m1 = data1.chapterSum;
+              //m2 = data1.progressSum;
+              m2 = data1.courseProgress;
+              progress = data1.progress;
+
+              $('.styContinue span').html('继续学习   ' + res1.chapterName);
+          }
+          if (isEmpty(res2)) {
+              n1 = 0;
+              n2 = 0;
+              $('.styNum').html("0%");
+              $(".v-progress").find("span").css({"width":"0%"});
+
+              $(".courseMessage").find("span").html("暂无课程通知");
+              $(".courseMessage").removeClass("active");
+          } else {
+              var data2 = res2;
+              n1 = data2.chapterNum;
+              n2 = data2.taskNum;
+              availability = data2.availability.replace(/\n|\r|\t|<[^<]*>/g,'');
+              if($api.trimAll(availability) == ""){
+                $(".courseMessage").find("span").html("暂无课程通知");
+                $(".courseMessage").removeClass("active");
+              }else{
+                $(".courseMessage").find("span").html(availability);
+                $(".courseMessage").addClass("active");
+              }
+          }
+          var htm1 = m1 + '/' + n1;
+          var htm2 = m2 + '/' + n2;
+          //- $('.chapters').html(htm1);
+          $('.chapters').html('0/'+n1);
+          $('.tasks').html(htm2);
+          //$('.pro').html((m2 / n2) * 100);
+          if (!isEmpty(res1) && !isEmpty(res2)) {
+              //- $('.styNum').html(parseInt(m2 / n2 * 100));
+              if(m2 && n2){
+                $('.styNum').html(parseInt(m2 / n2 * 100)+"%");
+                $(".v-progress").find("span").css({"width":parseInt(m2 / n2 * 100)+"%"});
+
+              }else if(progress){
+                $('.styNum').html("1%");
+                $(".v-progress").find("span").css({"width":"1%"});
+
+              }
+          }
+          
+      }
+      var h, y;
+      function init(name) {
+          //设置课程名称
+          $('.left-next').html(api.pageParam.courseName);
+          var expirationTime = api.pageParam.expirationTime;
+          var expirationDate = formatDate(expirationTime,'Y')+'/'+formatDate(expirationTime,'M')+'/'+formatDate(expirationTime,'D')
+          $('.expirationTime').html(expirationDate+"到期");
+          setTimeout(function () {
+              api.setStatusBarStyle({
+                  style: 'dark'
+              });
+          }, 200);
+          if(name){
+            $('.styContinue span').html('继续学习   ' + name);
+          }else if (!isEmpty(api.pageParam.chapterName) && api.pageParam.chapterName != 'undefined') {
+              
+                var chapterName = api.pageParam.chapterName;
+                $('.styContinue span').html('继续学习   ' + chapterName);
+              
+          } else {
+              $('.styContinue span').html('开始学习此课程');
+          }
+
+          var versionId = api.pageParam.versionId;
+          //课程状态
+          getVersionId({"versionId":versionId});
+
+          //获取全部课程版本
+          ajaxRequest('api/teachsource/course/coursesversionlist',"get", {"versionId":versionId}, function (ret, error) {
+            if(ret && ret.state=="success"){
+              versionInfo = ret.data;
+            }else{
+                // api.toast({
+                //   msg : ret.msg,
+                //   location : 'middle'
+                // });
+            }
+                           
+          })
+      }
+      $(function () {
+          //-----------------tab样式
+          $('.bewrite .bewtitl').parent().siblings().css({height: '0px'});
+          $('.bewrite .bewtitl').click(function () {
+              if ($(this).children('span').attr("class") == 'bewritesp1') {
+                  $(this).children('span').addClass('bewritesp2');
+                  $(this).children('span').removeClass('bewritesp1');
+                  $(this).parent().siblings().animate({height: '0px'}, 500);
+              } else {
+                  $(this).children('span').addClass('bewritesp1');
+                  $(this).children('span').removeClass('bewritesp2');
+                  $(this).parent().siblings().animate({height: 1 * 4 + 'rem'}, 500);
+              }
+          });
+          $(".catanav li").click(function () {
+              var flag = $(this).index();
+              var param = {};
+                  param.tag = 1;
+                  param.course_id = api.pageParam.course_id;
+                  param.chapterId = api.pageParam.chapterId;
+                  param.chapterName = api.pageParam.chapterName;
+                  param.courseName = api.pageParam.courseName;
+                  param.categoryId = api.pageParam.categoryId;
+                  param.subjectId = api.pageParam.subjectId;
+                  param.subjectName = api.pageParam.subjectName;
+                  param.categoryName = api.pageParam.categoryName;
+              if(flag == 1){
+                  
+                  api.openWin({
+                      name: "course-talk-top",
+                      url: 'course-talk-top.html',
+                      bgColor: '#fff',
+                      opaque: true,
+                      reload: true,
+                      softInputMode: 'resize',
+                      pageParam: param,
+                      vScrollBarEnabled: false
+                  });
+
+              }else if(flag == 2){  
+                  api.pageParam.course_id = api.pageParam.courseId;           
+                  api.openWin({
+                      name: "class-notes",
+                      url: 'class-notes.html',
+                      bgColor: '#000',
+                      opaque: true,
+                      reload: true,
+                      softInputMode: 'resize',
+                      pageParam: api.pageParam,
+                      vScrollBarEnabled: false
+                  });
+              }
+              // $('.catanav li').each(function (p) {
+              //     $('.catanav li img').eq(p).attr('src', '../image/c_icon' + (p + 1) + '.png');
+              // });
+              // $('.catanav li img').eq(flag).attr('src', '../image/z_icon' + (flag + 1) + '.png');
+              // $(".catanav li").removeClass('course_tab').eq(flag).addClass('course_tab');
+              // api.setFrameGroupIndex({
+              //     name: 'study_tab',
+              //     index: flag
+              // });
+          });
+          //$('.catanav li').first().css({color:'#00a185'});
+          //        $('.catanav li').on('tap',function () {
+          //            var i = $(this).index();
+          //            $(this).css({color:'#00a185'}).siblings().css({color:"#535353"});
+          //            $('.catanav li img').each(function (j) {
+          //                $('.catanav li img')[j].src = '../image/c_icon'+(j+1)+'.png';
+          //            });
+          //            $(this).children('img')[0].src = '../image/z_icon'+(i+1)+'.png';
+          //        });
+          /*$('.studying-top').on('tap', function (e) {
+           e.preventDefault();
+           api.closeWin({
+           name: 'Catalog',
+           url: 'Catalog.html'
+           });
+           }, false);*/
+      });
+      apiready = function () {
+      	 
+          get_tasks();
+          api.addEventListener({
+            name : 'flush_catalog'
+          }, function(ret) {
+
+            // init();
+            api.pageParam.courseId = ret.value.courseId;
+            //设置课程名称
+            if(ret.value.courseName){
+              $('.left-next').html(ret.value.courseName);
+            }            
+            get_tasks();
+          });
+          api.addEventListener({
+              name: 'keyback'
+          }, function (ret) {
+              api.sendEvent({
+                  name: 'flush_study'
+              });
+              api.closeWin();
+          });
+          api.addEventListener({
+              name: 'setChaptersNum'
+          }, function (ret) {
+            $('.chapters').html(ret.value.chaptersNum+'/'+ret.value.chaptersNumTotal);
+          });
+          api.addEventListener({
+              name: 'setTasksNum'
+          }, function (ret) {
+            $('.tasks').html(ret.value.tasksNum+'/'+ret.value.tasksNumTotal);
+          });
+          var header = $api.byId('header');
+          var header_all = $api.dom('.styHeight');
+          $api.fixIos7Bar(header);
+          var headerPos = $api.offset(header_all);
+          y = $('.styHeight').height();
+          h = api.winHeight - headerPos.h;
+          api.openFrameGroup({
+              name: 'study_tab',
+              background: '#fff',
+              rect: {
+                  x: 0, //左上角x坐标
+                  y: y, //左上角y坐标
+                  w: api.winWidth, //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+                  h: h, //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+                 /* marginLeft: 0, //相对父window左外边距的距离
+                  marginTop: 0, //相对父window上外边距的距离
+                  marginBottom: 0, //相对父window下外边距的距离
+                  marginRight: 0 //相对父window右外边距的距离*/
+              },
+              scrollEnabled: true,
+              index: 0,
+              preload: 0,
+              frames: [{//目录
+                  name: 'catalog',
+                  url: 'catalog.html',
+                  bounces: false,
+                  reload: true,
+                  bgColor: '#fff',
+                  vScrollBarEnabled: true,
+                  hScrollBarEnabled: false,
+                  pageParam: {course_id: api.pageParam.courseId, categoryId: api.pageParam.categoryId}
+              // }, {//讨论
+              //         name: 'course-talk-f',
+              //         url: 'course-talk-f.html',
+              //         bounces: false,
+              //         reload: true,
+              //         bgColor: '#fff',
+              //         vScrollBarEnabled: true,
+              //         hScrollBarEnabled: false,
+              //         pageParam: {
+              //             course_id: api.pageParam.courseId,
+              //             chapterId: api.pageParam.chapterId,
+              //             chapterName: api.pageParam.chapterName,
+              //             courseName: api.pageParam.courseName,
+              //             categoryId: api.pageParam.categoryId,
+              //             subjectId: api.pageParam.subjectId,
+              //             subjectName: api.pageParam.subjectName,
+              //             categoryName: api.pageParam.categoryName
+              //         }
+              // }, {//笔记
+              //     name: 'course-notes-f',
+              //     url: 'course-notes-f.html',
+              //     bounces: false,
+              //     reload: true,
+              //     bgColor: '#fff',
+              //     vScrollBarEnabled: true,
+              //     hScrollBarEnabled: false,
+              //     //pageParam:{course_id:api.pageParam.courseId,categoryId:api.pageParam.categoryId,chapterId:api.pageParam.chapterId,subjectId:api.pageParam.subjectId}
+              //     pageParam: {
+              //         course_id: api.pageParam.courseId,
+              //         chapterId: api.pageParam.chapterId,
+              //         chapterName: api.pageParam.chapterName,
+              //         courseName: api.pageParam.courseName,
+              //         categoryId: api.pageParam.categoryId,
+              //         subjectId: api.pageParam.subjectId,
+              //         subjectName: api.pageParam.subjectName,
+              //         categoryName: api.pageParam.categoryName
+              //     }
+              // },
+              //     {//问答
+              //     name: 'course-question-f',
+              //     url: 'course-question-f.html',
+              //     bounces: false,
+              //     reload: true,
+              //     bgColor: '#fff',
+              //     vScrollBarEnabled: true,
+              //     hScrollBarEnabled: false,
+              //     pageParam: {
+              //         course_id: api.pageParam.courseId,
+              //         categoryId: api.pageParam.categoryId,
+              //         chapterId: api.pageParam.chapterId,
+              //         subjectId: api.pageParam.subjectId
+              //     }
+              //     
+              }]
+          }, function (ret, err) {
+              $('.catanav li img').each(function (p) {
+                  $('.catanav li img').eq(p).attr('src', '../image/c_icon' + (p + 1) + '.png');
+              });
+              $('.catanav li img').eq(ret.index).attr('src', '../image/z_icon' + (ret.index + 1) + '.png');
+              $(".catanav li").removeClass('course_tab').eq(ret.index).addClass('course_tab');
+          });
+          init();
+          
+          //已读消息更新接听
+        api.addEventListener({
+            name: 'center_num'
+        }, function(ret) {
+            if (!isEmpty($api.getStorage('center_num') && $api.getStorage('center_num') != 0)) {
+                var num = $api.getStorage('center_num');
+                if (num > 99) {
+                    $('.center_num').html('99+');
+                } else if (num < 1) {
+                    $('.center_num').html(num);
+                } else {
+                    $('.center_num').html('');
+                }
+            }
+        });
+
+        var param = {};
+        param.pageNo = 0;
+        param.pageSize = 20;
+        // param.typeId = '';
+        param.isRead = 0;
+        // param.type = 1;
+        param.token = $api.getStorage('token');
+        ajaxRequest('api/study/message/list/v1.0', 'get', param, function(ret, err) {
+            
+            if (err) {
+                api.toast({
+                    msg : err.msg,
+                    location : 'middle'
+                });
+                return false;
+            }
+            if (ret && ret.state == 'success') {
+                if (ret.totalCount == 0) {
+                    $('.message-bells .msg-mark').addClass('none');
+                } else {
+                	if(ret.totalCount > 99){
+                		$('.message-bells .msg-mark').html("99+");
+                	}else{
+                		$('.message-bells .msg-mark').html(ret.totalCount);
+                	}
+                    
+                }
+                $api.setStorage('center_num', ret.totalCount);
+            } else {
+                //api.toast({
+                //  msg : ret.msg,
+                //  location : 'middle'
+                //});
+            }
+        });
+ 
+        
+	//已读消息更新接听
+	    api.addEventListener({
+	        name : 'center_num'
+	    }, function(ret) {
+	        if ($api.getStorage('center_num') && $api.getStorage('center_num') != 0) {
+	            var num = $api.getStorage('center_num');
+	            if(num > 99){
+	        		$('.message-bells .msg-mark').html("99+");
+	        	}else{
+	        		$('.message-bells .msg-mark').html(num);
+	        	}
+	            $('.center_num').removeClass('none');
+	        } else {
+	            $('.message-bells .msg-mark').addClass('none');
+	            $('.center_num').addClass('none');
+	        }
+	
+	    });
+	        
+          
+          
+      };
+      
+      //消息
+    function go_next(name) {
+    	
+        var reload = true;
+        if (name == 'video-buffer') {
+            reload = true;
+        }
+        api.openWin({
+            name : name,
+            url : name + '.html',
+            delay : 200,
+            reload : reload
+        });
+    }
+      
+      function draw() {
+          //------------------进度
+          //获取屏幕的宽度
+          var clientWidth = document.documentElement.clientWidth;
+          //根据设计图中的canvas画布的占比进行设置
+          var canvas = document.querySelector('.mycanvas');
+          var canvasWidth = Math.floor(clientWidth * 198 / 720);
+          canvas.width = canvasWidth;
+          canvas.height = canvasWidth;
+          //画圆环的函数
+          function drawBg(x, y, radius, startPoint, endPoint, lineWidth, lineColor, lineStyle) {
+              if (canvas.getContext) {
+                  var ctx = canvas.getContext("2d");
+                  ctx.beginPath();
+                  ctx.arc(x, y, radius, startPoint, endPoint);
+                  ctx.lineWidth = lineWidth;
+                  ctx.lineCap = lineStyle;
+                  ctx.strokeStyle = lineColor;
+                  ctx.stroke();//画空心圆
+                  ctx.closePath();
+              }
+          }
+      
+          //变动的数字
+          bfb = 0;
+          var proCont = document.querySelector('.styPriMidBcot');
+          var styPriMidBcot = proCont.innerHTML;
+      
+          function start() {
+              drawBg(canvasWidth / 2, canvasWidth / 2, canvasWidth / 2.1, Math.PI * 2 * ((bfb - 1) / 100), Math.PI * 2 * (bfb / 100), 5, '#fff');
+              t = setTimeout(start, 20);
+              if (bfb >= styPriMidBcot) {
+                  clearTimeout(t);
+                  bfb = 0;
+                  return;
+              }
+              bfb += 1;
+              proCont.innerHTML = bfb + "%";
+          }
+      
+          drawBg(canvasWidth / 2, canvasWidth / 2, canvasWidth / 2.1, 0, Math.PI * 2, 5, 'rgba(255,255,255,0.4)');
+          start();
+      }
+      
+      
+      //找出任务进度所在课程数据数组中的索引
+      //function findTask(study_progress, course_detail, chapdeep, index_arr, is_ok) {
+      function findTask(study_progress, course_detail) {
+          if (isEmpty(course_detail) || isEmpty(course_detail.chapters)) {
+              api.toast({
+                  msg: '未获取到课程信息',
+                  location: 'middle'
+              });
+              return false;
+          } else {
+      
+              var task_arr = save_tasks(course_detail);
+              var res_process = {
+                  last_progress: 0
+              };
+              if (isEmpty(study_progress)) {
+                  //如果没有学习进度,则从第一个学习任务开始学习,找到第一学习任务
+                  for (var i in task_arr) {
+                      res_process['task_info'] = task_arr[i];
+                      break;
+                  }
+                  judge_task(res_process, course_detail);
+              } else {
+                  var tmp_chapterId = study_progress.chapterId;//上次学习任务所属的章节id
+                  var tmp_taskId = study_progress.taskId;//上次学习任务id
+                  var tmp_state = study_progress.state;//上次学习任务是否已经学完(init:未学完,complate:已完成)
+                  var tmp_progress = study_progress.progress;//上次学习任务的进度
+                  if (tmp_state == 'complate') {
+                      var flag = false;
+                      var is_find = false;
+                      for (var i in task_arr) {
+                          if (flag == true) {
+                              if (!isEmpty(task_arr[i]) && !isEmpty(task_arr[i].taskInfo)) {
+                                  res_process.task_info = task_arr[i].taskInfo;
+                                  is_find = true;
+                              }
+                              break;
+                          } else {
+                              if (i == tmp_taskId) {
+                                  flag = true;
+                              }
+                          }
+                      }
+                      if (!is_find) {
+                          api.toast({
+                              msg: '没有更多任务啦',
+                              location: 'middle'
+                          });
+                          return false;
+                      } else {
+                          judge_task(res_process, course_detail);
+                      }
+                  } else {
+                      res_process.task_info = task_arr[tmp_taskId];
+                      res_process.last_progress = tmp_progress;
+                      judge_task(res_process, course_detail);
+                  }
+              }
+          }
+      }
+      
+      //点击页面上的在学课程，跳转学习课程页面
+      function play() {
+          var courseId = api.pageParam.courseId;
+          
+          $api.setStorage("closeSetTimeOut",true);
+          /*if (isEmpty(courseId)) {
+           api.toast({
+           msg: '获取课程失败',
+           location: 'middle'
+           });
+           return false;
+           }
+           if (isEmpty(chapterId)) {
+           chapterId = '';
+           }*/
+          api.showProgress({
+              title: '加载中',
+              modal: false
+          });
+          var tmp_course_detail = $api.getStorage(courseId);
+          if (isEmpty(tmp_course_detail)) {
+              //获取课程的详细信息
+              //api/teachsource/course/courseDetail，接口编号：004-006
+              ajaxRequest('api/teachsource/course/courseDetail', 'get', {courseId: courseId}, function (ret, err) {//004.006获取课程的详细信息
+                  if (err) {
+                      api.toast({
+                          msg: err.msg,
+                          location: 'middle'
+                      });
+                      return false;
+                  }
+                  if (ret && ret.state == 'success') {
+                      var course_detail = ret.data[0];//课程详情数据
+                      $api.setStorage(courseId, course_detail);
+                      getLastProgress(course_detail);//用户上次的学习进度
+                  }
+              });
+          } else {
+              var course_detail = tmp_course_detail;//存储课程详细信息
+              getLastProgress(course_detail);//用户上次学习进度数据
+          }
+      }
+      //判断任务类型，跳转相应的页面
+      function judge_task(res_process, course_detail) {
+          if (isEmpty(course_detail) || isEmpty(course_detail.chapters) || isEmpty(res_process)) {
+              api.toast({
+                  msg: '获取课程信息失败',
+                  location: 'middle'
+              });
+              return false;
+          }
+          var task_info = res_process.task_info.taskInfo;//当前任务信息
+          if (isEmpty(task_info)) {
+              api.toast({
+                  msg: '暂无任务',
+                  location: 'middle'
+              });
+              return false;
+          }
+
+          var chapterId = res_process.task_info.chapterId;
+          $api.setStorage("setchapterId",chapterId);
+          
+          //判断当前任务类型
+          if (task_info.taskType == 'video') {
+              //视频类型
+              var new_win_name = 'video';
+              var new_win_url = 'video.html';
+          } else if (task_info.taskType == 'entry' || task_info.taskType == 'pdfread' || task_info.taskType == 'exam') {
+              //entry（外链类型）、pdfread（pdf类型）、exam（测试题类型）
+              var new_win_name = 'course-test';
+              var new_win_url = 'course-test.html';
+          } else {
+              api.toast({
+                  msg: '暂无任务，请稍后再试或联系客服',
+                  location: 'middle'
+              });
+              return false;
+          }
+          
+          //需要传递的参数
+          var pageParams = {
+              from: 'course-studying',
+              courseId: course_detail.courseId,//课程id
+              last_progress: res_process.last_progress,//学习进度
+              course_detail: course_detail,//课程详情
+              //chapters_num: res_process.chapters_num,//一级章节索引
+              //chapters_child_num: res_process.chapters_child_num,//二级章节索引
+              //child_task_num: res_process.child_task_num,//任务索引
+              task_info: task_info,//当前要学习的任务信息
+              type: 'task'
+          };
+          
+          //设置屏幕向右翻转
+          api.setScreenOrientation({
+              orientation: 'landscape_right'
+          });
+          //跳转到播放页面
+          api.openWin({
+              name: new_win_name,
+              url: new_win_url,
+              delay: 200,
+              slidBackEnabled: false,//iOS7.0及以上系统中，禁止通过左右滑动返回上一个页面
+              pageParam: pageParams,
+              reload: true
+          });
+      }
+      //获取上一次的学习进度
+      function getLastProgress(course_detail) {
+          var nickName = get_loc_val('mine', 'nickName');
+          var courseId = course_detail.courseId;
+          //如果没有缓存，重新请求接口
+        // var tmpParam = {
+        //     'token': $api.getStorage('token'),//必须
+        //     'memberId': get_loc_val('mine', 'memberId'),
+        //     'categoryId': course_detail.categoryId,//非必须
+        //     'subjectId': course_detail.subjectId,//非必须
+        //     'courseId': courseId,//非必须
+        //     'chapterId': '',//非必须
+        //     'taskId': ''//非必须
+        // };
+        // //(实时)最后一次任务状态（new）tested,编号:008.026,GET - /api/v2.1/chapter/tasklastProgress
+        // ajaxRequest('api/v2.1/chapter/tasklastProgress', 'get', tmpParam, function (ret, err) {//008.026 最后一次任务状态（new）tested，接口编号：008-026
+      
+        //获取课程任务进度列表（new）tested
+        var param = {
+            'token': $api.getStorage('token'), //必须
+            'memberId' : getstor('memberId'),
+            'courseId': courseId, //课程ID,必须
+        };
+        ajaxRequest({ 'origin': 'http://action.caicui.com/', 'pathname': 'api/userAction/course/getTasksProgress/v1.0/' }, 'get', param, function(ret, err) {
+          
+            if (err) {
+                
+                api.toast({
+                    msg: err.msg,
+                    location: 'middle'
+                });
+                return false;
+            }
+            if (ret && ret.state == 'success') {
+      
+              
+              var lastProgressData = ret.data;
+              var i = 0,
+                  len = lastProgressData.length,
+                  j, d;
+              for (; i < len; i++) {
+                  for (j = 0; j < len; j++) {
+                      if (parseInt(lastProgressData[i].createDate) > parseInt(lastProgressData[j].createDate)) {
+                          d = lastProgressData[j];
+                          lastProgressData[j] = lastProgressData[i];
+                          lastProgressData[i] = d;
+                      }
+                  }
+              }
+                //$api.setStorage(nickName + courseId, ret.data);
+                var study_progress = ret.data;
+                //var res_process = findTask(study_progress, course_detail, '', '', false);//根据进度和课程信息，找到要学习的任务
+                findTask(lastProgressData[0], course_detail);//根据进度和课程信息，找到要学习的任务
+                /*
+                 if (isEmpty(res_process)) {
+                 return false;
+                 } else {
+                 judge_task(res_process, course_detail);
+                 }
+                 */
+            }
+        });
+      }
+    </script>
+  </body>
+</html>

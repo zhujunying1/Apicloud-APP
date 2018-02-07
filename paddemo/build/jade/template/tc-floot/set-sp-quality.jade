@@ -1,0 +1,28 @@
+extends ../../layout/layout
+block html
+    -var htmlclass='set-info'
+block head
+    title 设置
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    .zhezhao_box
+    .tc_box
+        .set_tit 视频质量
+            i.icon-arrow-left
+        .set_box1.equal_box
+            .set_list
+                ul
+                    li.cl
+                        .li-left 普通
+                        .li-right
+                            i.icon-check
+                    li.cl
+                        .li-left 标清
+                    li.cl
+                        .li-left 高清
+block scripts
+    script(type="text/javascript").
+        apiready=function(){
+
+        };
+                                                                                                                                                         

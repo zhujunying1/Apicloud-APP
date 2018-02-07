@@ -1,0 +1,47 @@
+extends ../layout/layout
+block body
+    #header.header.header-black
+        .left(onclick='my_close()', tapmode='')
+            i.icon-arrow-left
+        .left-txt
+            | 基本信息
+block scripts
+
+    script(type='text/javascript').
+        function my_close(){
+            api.setStatusBarStyle({
+                style: 'dark'
+            });
+            api.closeWin();
+        }
+        apiready = function() {
+            setTimeout(function(){
+                api.setStatusBarStyle({
+                    style: 'light'
+                });
+            },200);
+            api.addEventListener({
+                name: 'keyback'
+            }, function (ret, err) {
+                api.closeWin();
+            });
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            var headerPos = $api.offset(header);
+            var width = api.winWidth;
+            var height = api.winHeight - headerPos.h;
+            api.openFrame({
+                name : 'modify-f',
+                url : 'modify-f.html',
+                bounces : false,
+                opaque : true,
+                reload : true,
+                vScrollBarEnabled : false,
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                }
+            });
+        };

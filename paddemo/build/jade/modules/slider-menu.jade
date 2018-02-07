@@ -1,0 +1,17 @@
+.slider-menu
+    img.avatar(src="../image/touxiang.png")
+    ul
+        -var vM = ['学习中心','在线课程','我的笔记','我的问答','我的讨论','缓存课程','设置']
+        -var vN = ['dashboard','course','edit3','question','comments2','download2','cog']
+        -var vP = ['dashboard','course','edit3','question','question','download2','cog']
+        each aM,i in vM
+            li(tapmode="active", onclick="set_index(#{i})", class= i == 0 ? 'active' : '')
+                i.icon(class='icon-'+vN[i])
+                p!=aM
+script(type='text/javascript').
+    function set_index(a) {
+       api.sendEvent({
+            name: 'hashomepage',
+            extra: {sethomepage: a}
+       });
+    }

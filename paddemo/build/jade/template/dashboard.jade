@@ -1,0 +1,99 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'homepage'
+block body
+    .nologin.show.none
+        .logo
+            img(src="../image/logo-t.png", alt="")
+        ul.form
+            li
+                input.input-txt(type="text", placeholder="手机号／邮箱", name="username")
+            li
+                input.input-txt(type="password", placeholder="请输入密码", name="password")
+                span.forget(tapmode="", onclick="forget()") 忘记密码?
+            //li.remberpass(tapmode,onclick="rember(this)")
+                div.is_rember.bgcl
+                    p
+                |记住账号密码
+            li
+                .btn.btn-success.btn-block(onclick="login()", tapmode="") 登录
+        .phone(tapmode="", onclick="phone_reg()") 手机号注册
+        //- 第三方登录
+        .lands
+            -var st = ['qq','weixin','weibo']
+            -var qt = ['qq','微信','微博']
+            -var m = ['login_qq','login_wx','login_wb']
+            each ss , i in qt
+                .ot(tapmode="",class="#{m[i]}" onclick="login_#{st[i]}()")
+                    i(class='icon-#{st[i]}')
+                    span=ss
+    .onlogin.none
+        #header.header.header-white.header-home(head='0')
+            .header-index
+                .center
+                    .logo
+                .right(tapmode, onclick="myFrame('pop-msg','full',false,this,'')")
+                    i.icon-message
+                    span.msg-mark.center_num1
+            .header-course
+                .center
+                    .logo
+                .right(tapmode, onclick="myFrame('pop-msg','full',false,this,'')")
+                    i.icon-message
+                    span.msg-mark.center_num2
+            .header-note
+                .center 章节列表
+                ul.right
+                    li(tapmode, onclick="showSearchBar('note');myFrame('my-note-list-f','large',false,this,'dash')")
+                        i.icon-search2
+                    li(tapmode, onclick="newMyNote()")
+                        span 新建
+                        i.icon-plus
+            .header-answer
+                .center 我的问答
+                ul.right
+                    li(tapmode,onclick="open_answer()")
+                        i.icon-file-plus
+                    li(tapmode, onclick="showSearchBar('answer')")
+                        i.icon-search2
+            include ../modules/search-bar
+            .header-talk
+                .left(tapmode, onclick="talk_sort()")
+                    i.icon-arrow-down
+                    span 最新回复
+                .center 我的讨论
+            .header-cache
+                .center 缓存列表
+                ul.right.cache
+                    li.none(tapmode, onclick='rightcancel($(this))')
+                        .btn.btn-o 取消
+                    li.none(tapmode, onclick='allremove($(this))')
+                        .btn.btn-o.red 批量删除
+                    li(tapmode, onclick='righttrash($(this))')
+                        i.icon-trash
+        #slider.slider
+            .slider-menu
+                .imgbox(tapmode,onclick="modify()")
+                    img.avatar
+                ul#leftMenu
+                    -var vM = ['学习中心','在线课程','我的笔记','我的问答','我的讨论','缓存课程']
+                    -var vN = ['dashboard','course','edit3','question','comments2','download2']
+                    each aM,i in vM
+                        li(onclick="set_index(#{i})", class= i == 0 ? 'active' : '')
+                            span
+                                i.icon(class='icon-' + vN[i])
+                                p!=aM
+                    li(tapmode, onclick="myFrame('set-info','full',false,this,'')")
+                        span
+                            i.icon-cog
+                            p 设置
+    div(style="opacity:.0001; position:fixed; z-index:-1;left:-10rem")
+        .s-head#sHead
+        .course-slider#sLeft
+        ul.footer-nav#sFoot
+        .down-progress#svgDown
+        .audio-progress#svgAudio
+block scripts
+    script(type='text/javascript',src="../script/pagejs/user-center.js")
+
+

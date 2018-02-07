@@ -1,0 +1,44 @@
+extends ../layout/layout
+block head
+    title 我的笔记-笔记列表头部
+block body
+    .s-head
+        .left(tapmode, onclick="closeMyNote()")
+            i.icon-back
+        .center 章节列表
+block scripts
+    script(type="text/javascript").
+        function closeMyNote() {
+            api.closeFrame({
+                name: 'course-chapter-list-f'
+            });
+            api.closeFrame({
+                name: 'course-note-edit-f'
+            });
+            api.closeFrame();
+        }
+        apiready = function () {
+            api.openFrame({
+                name: 'course-chapter-list-f',
+                url: 'course-chapter-list-f.html',
+                bgColor: '#ffffff',
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headSh
+                },
+                pageParam: api.pageParam,
+                bounces: false,
+                delay: 200
+            });
+            /*api.addEventListener({
+             name: 'closeFrameAll'
+             }, function () {
+             api.closeFrame({
+             name: 'note-chapter-list-f'
+             });
+             api.closeFrame();
+             });*/
+        };
+                                                      

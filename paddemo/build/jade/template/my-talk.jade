@@ -1,0 +1,175 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'my-list'
+
+block head
+    title 我的讨论
+block body
+    include ../modules/talk-list
+block scripts
+    script(type="text/javascript").
+        function getData(order_by, page) {
+            var param = {};
+            param.pageNo = page;
+            param.pageSize = pageSize;
+            param.self = 1;
+            param.ordertype = order_by;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/studytools/discusslist/v2.1', 'get', param, function (ret, err) {//003.300.2
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success'){
+                    no_loaded=false;
+                    var tpl = $('#tpl').html();
+                    var content = doT.template(tpl);
+                    total = ret.totalCount;
+                    if (page == 1) {
+                        if(isEmpty(ret.data)||total==0){
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        $('#content').html(content(ret.data));
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                    api.parseTapmode();
+                    audioDom();
+                } else {
+                   /* api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+                api.parseTapmode();
+            });
+        }
+        function talk_detail(obj){
+            var param = {};
+            var categoryId = isEmpty($(obj).attr('data-id')) || $(obj).attr('data-id') == undefined || $(obj).attr('data-id') == 'undefined' ? '证书Id' : $(obj).attr('data-id');
+            var subjectId = isEmpty($(obj).attr('subjectId')) || $(obj).attr('subjectId') == undefined || $(obj).attr('subjectId') == 'undefined' ? '科目id' : $(obj).attr('subjectId');
+            var chapterId = isEmpty($(obj).attr('data-key')) || $(obj).attr('data-key') == undefined || $(obj).attr('data-key') == 'undefined' ? '章节Id' : $(obj).attr('data-key');
+            var taskId = isEmpty($(obj).attr('taskId')) || $(obj).attr('taskId') == undefined || $(obj).attr('taskId') == 'undefined' ? '' : $(obj).attr('taskId');
+            var taskProgress = isEmpty($(obj).attr('taskProgress')) || $(obj).attr('taskProgress') == undefined || $(obj).attr('taskProgress') == 'undefined' ? 0 : $(obj).attr('taskProgress');
+            var taskType = isEmpty($(obj).attr('taskType')) || $(obj).attr('taskType') == undefined || $(obj).attr('taskType') == 'undefined' ? '' : $(obj).attr('taskType');
+            var courseId = isEmpty($(obj).attr('courseId')) || $(obj).attr('courseId') == undefined || $(obj).attr('courseId') == 'undefined' ? '课程id' : $(obj).attr('courseId');
+            param.taskType = taskType;
+            param.taskId = taskId;
+            param.taskProgress = taskProgress;
+            param.subjectId = subjectId;
+            param.categoryId = categoryId;
+            param.chapterId = chapterId;
+            param.courseId = courseId;
+            param.memberId = $(obj).attr('data-val');
+            param.id= $(obj).attr('talk-id');
+            param.lx = 'talk-detail';
+            api.openFrame({
+                delay:200,
+                name: 'my-talk-detail',
+                url:  'my-talk-detail.html',
+                rect: {
+                    x: leftLw,
+                    y: 0,
+                    w: api.winWidth - leftLw,
+                    h: headLh
+                },
+                pageParam: param,
+                bounces: false
+            });
+        }
+        var order_by = 1;
+        var total = 0;
+        var no_loaded=true;
+        var currentPage = 1;
+        var pageSize = 10;
+        apiready = function () {
+            //            api.addEventListener({
+            //                name: 'my-talk-detail-sc'
+            //            }, function (ret) {
+            //                getData(order_by, 1);
+            //            });
+            api.addEventListener({
+                name: 'talk_f'
+            }, function (ret) {
+                getData(order_by, 1);
+            });
+            api.addEventListener({
+                name: 'close_sort'
+            }, function (ret) {
+                if (ret && ret.value) {
+                    var typ = ret.value.typ;
+                    if (typ == 1) {
+                        return false;
+                    }
+                    var sort_name = ret.value.sort_name;
+                    switch (sort_name) {
+                        case '发帖时间':
+                            order_by = 1;
+                            break;
+                        case '最新回复':
+                            order_by = 2;
+                            break;
+                        case '回复数量':
+                            order_by = 3;
+                            break;
+                        case '精华讨论':
+                            order_by = 4;
+                            break;
+                    }
+                    getData(order_by, 1);
+                }
+            });
+            getData(order_by, 1);
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                getData(order_by, 1);
+                currentPage = 1;
+                audioDom();
+            });
+                    //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (currentPage < Math.ceil(total / pageSize)) {
+                    currentPage++;
+                    getData(order_by, currentPage);
+                }
+                else {
+                    api.toast({
+                        msg: '加载完毕'
+                    });
+                    audioDom();
+                }
+            });
+            api.addEventListener({
+                name: 'talk-edit-lx'
+            }, function (ret) {
+                getData(order_by, 1);
+            });
+
+        };
+
+
+

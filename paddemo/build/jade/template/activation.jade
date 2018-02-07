@@ -1,0 +1,41 @@
+extends ../layout/layout
+block head
+   title 未激活课程
+   link(rel='stylesheet', type='text/css', href='../css/cckt.css')
+block body
+
+   #mask
+      .setup
+         //头部
+         .header_active
+            h1 您正在激活的课程
+               span  　F3
+         .content_active
+            p 激活课程后即可正常学习，请注意，激活动作无法撤销，此课程一旦激活将在180天后失效，失效后将无法继续学习。请在有效期内合理安排学习进度。激活此课程同时会激活F3串讲课XXXX
+            h1 您正在激活的课程
+            p 您正在激活的课程具有纸质讲义，客服将在
+               span 2个工作日
+               |内给你寄送讲义，请确认您的寄送信息：
+            //表单
+            .form_list
+               ul
+                  li
+                     label 电　话：　
+                     input
+                  li
+                     label 所在地：　
+                     select
+                     select
+                  li
+                     label 详细地址：
+                     input
+            //提示
+            p.prompt 温馨提示：目前寄送范围仅限中国内地地址，港澳台地区及其它国家地址无法寄送，请确认地址为有效地址。
+            //同意激活
+            .active_agree
+               i.tongyi
+               span 同意激活
+         //按钮
+         .active_btn
+            .btn_jihuo 激活
+            .btn_yhzs 以后再说

@@ -1,0 +1,36 @@
+#content
+mixin lst
+    |{{for(var p in it) { }}
+    dl.cont-list(id="li{{=it[p].id}}")
+        dt
+            img.avatar(src='{{=static_url+it[p].headImg}}', alt='')
+        dd
+            .link-box(tapmode, onclick="talk_detail(this)",data-id='{{=it[p].categoryId}}',data-key='{{=it[p].chapterId}}',talk-id='{{=it[p].id}}',subjectId='{{=it[p].subjectId}}',data-val='{{=it[p].memberId}}',taskId='{{=it[p].taskId}}',taskProgress='{{=it[p].taskProgress}}',taskType='{{=it[p].taskType}}',courseId='{{=it[p].courseId}}')
+                .name
+                    span {{=it[p].nikeName}}
+                    |{{if(it[p].levelimg){ }}
+                    img(src='{{=static_url+it[p].levelimg}}')
+                    |{{ } }}
+                .title {{=it[p].title}}
+                .describe {{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}
+            |{{ if(it[p].imgPath) { }}
+            ul.pic-group
+                | {{ var imgPath=it[p].imgPath.split(','); }}
+                | {{ for(var i in imgPath) { }}
+                | {{if(i<=2) { }}
+                li(style="background-image:url({{=static_url+imgPath[i]}})", tapmode, onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')")
+                |{{ } }}
+                |{{ } }}
+                | {{ if(imgPath.length>=3) { }}
+                b 共{{=it[p].imgPath.split(',').length}}张
+                | {{ } }}
+            |{{ } }}
+            .footer
+                .count
+                    i.icon-replys
+                    span {{=isEmpty(it[p].replyCount)?'0':it[p].replyCount}}
+                .time {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}} {{ } }}
+    |{{ } }}
+script(id='tpl',type='text/x-dot-template')
+    +lst
+

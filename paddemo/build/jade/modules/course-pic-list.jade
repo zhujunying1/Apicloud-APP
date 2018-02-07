@@ -1,0 +1,54 @@
+mixin lst
+    li(tapmode,data-coursename="{{=it[p].courseName}}",data-chapterName="{{=it[p].chapterName}}")
+        .cpl-head(style="background-image:url({{=static_url+it[p].courseBkImage}})")
+            //h4 {{=formatDate(it[p].expirationTime,'Y')+'-'+formatDate(it[p].expirationTime,'M')+'-'+formatDate(it[p].expirationTime,'D')}}  {{=formatDate(it[p].expirationTime,'h')+':'+formatDate(it[p].expirationTime,'m')}}
+            h4 {{=formatDate(it[p].expirationTime,'Y')+'-'+formatDate(it[p].expirationTime,'M')+'-'+formatDate(it[p].expirationTime,'D')}} 过期
+            //-h5 更新到第8节课
+        .cpl-main
+            .li
+                h3(style="margin-top: 0.25rem;") {{=it[p].courseName}}
+                | {{if(!isEmpty(it[p].taskprogress)){ }}
+                p.none 上次学习到：{{=it[p].chapterName}}
+                | {{ }else{ }}
+                p.none 开始学习此课程
+                | {{ } }}
+            .li.pro-li
+                .clearfix.cla
+                    .left
+                        i.icon-play3
+                        span {{=it[p].taskprogress?it[p].taskprogress:0}} / {{=it[p].taskTotal}}
+                    .right
+                        i.icon-pencil2
+                        span {{=it[p].taskprogress?it[p].taskprogress:0}} / {{=it[p].taskTotal}}
+                //- |{{var pro=!isEmpty(it[p].taskprogress)?it[p].taskprogress:0;var tol=!isEmpty(it[p].taskTotal)?it[p].taskTotal:0;}}
+                .clearfix.clb
+                    | 学习进度：
+                    //-| {{it[p].taskprogress}} - {{it[p].taskTotal}} +++ {{=(Math.round(parseFloat(pro/tol))*100>90)?100:(Math.round(parseFloat(pro/tol))*100)?(Math.round(parseFloat(pro/tol))*100>90)?100:(Math.round(parseFloat(pro/tol))*100):0 }}%
+                .progress-box
+                    .progress
+                        .progress-bar(min='{{=!isEmpty(it[p].taskprogress)?it[p].taskprogress:0}}', max='{{=!isEmpty(it[p].taskTotal)?it[p].taskTotal:0}}')
+            .li.lecturer
+                dl
+                    img.avatar(src="{{=static_url+it[p].teacherImage}}")
+                    dt {{=it[p].teacherName}}
+                    dd {{=it[p].teacherHonor}}
+            .li.cpl-fool
+                .btn.btn-o(onclick="openActivate('{{=it[p].courseName}}','{{=it[p].teacherName}}','{{=it[p].teacherHonor}}','{{=it[p].buyTime}}','{{=it[p].effectiveDay}}','{{=it[p].teacherImage}}','{{=it[p].isU}}','{{=it[p].courseId}}','{{=it[p].courseBkImage}}',this)")
+                    span 马上激活
+                    .none.data {{=JSON.stringify(it[p])}}
+                    i.icon-lock-open
+                | {{ if(isEmpty(it[p].is_show)) { }}
+                | {{ if(it[p].isU==true){ }}
+                .btn.btn-o(tapmode,onclick="renew()")
+                    span 申请重听
+                    i.icon-redo
+                | {{ } else{ }}
+                .btn.btn-o(tapmode,onclick="api.toast({msg:'只有U+课程可以免费申请重听！',location:'middle'})") 申请重听
+                | {{ } }}
+                | {{ } }}
+script(id='tpl',type='text/x-dot-template')
+    | {{for(var p in it) { }}
+    +lst
+    | {{ } }}
+
+

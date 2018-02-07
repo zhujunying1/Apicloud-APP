@@ -1,0 +1,124 @@
+extends ../layout/layout
+block body
+    .signmain
+        .avatar-up(onclick='open_img()', tapmode='')
+            img.avatar(src='../image/S07.png',alt='')
+        .form
+            ul
+                li
+                    input.input-txt(name='nickname' type='text', placeholder='用户名')
+                    span.tm 可用于登录
+                    input(name='imgPath' type='hidden')
+            .btn.btn-block(onclick='next()', tapmode='') 保存
+block scripts
+    script(type='text/javascript').
+        var imgPath = '', height = $api.getStorage('height') ? $api.getStorage('height') : 1080, width = $api.getStorage('width') ? $api.getStorage('width') : 1080;
+        function open_img(){
+            var $body = $api.dom('body');
+            var width = $api.offset($body).w;
+            var bodyH = api.pageParam.bodyH;
+            api.openFrame({
+                name: 'sign-photo-f',
+                url: 'sign-photo-f.html',
+                opaque: false,
+                reload:true,
+                bgColor:"rgba(0,0,0,0.05)",
+                rect: {
+                    x:0,
+                    y:0,
+                    w:width,
+                    h:bodyH
+                }
+            });
+        }
+        function next(){
+            var nickname = $.trim($('input[name=nickname]').val());
+            if(nickname==''){
+                api.toast({
+                    msg: '用户名不能为空',
+                    location: 'middle'
+                });
+                return false;
+            }
+            /*var regex=/^[a-zA-Z]\w{5,20}$/;
+            if (!regex.test(nickname)) {
+                api.toast({
+                    msg : '用户名必须为5-20个字符,可以是数字、字符,首字符必须是字母',
+                    location : 'middle'
+                });
+                return false;
+            }*/
+            if(imgPath==''){
+                api.toast({
+                    msg: '请上传头像',
+                    location: 'middle'
+                });
+                return false;
+            }
+            var obj = {};
+            obj.nickname = nickname;
+            obj.imgPath = imgPath;
+            obj.height = height;
+            obj.width = width;
+            obj.token = $api.getStorage('token');
+            api.showProgress({
+                title : '处理中',
+                modal : true
+            });
+            ajaxRequest('api/v2.1/cutAndSaveAvatar', 'post', obj, function (ret, err) {//007.012  完善用户信息
+                api.hideProgress();
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success') {
+                    $api.setStorage('token',ret.data.token);
+                    ajaxRequest('api/v2/member/get', 'get', {token:ret.data.token}, function (res, error) {
+                        if(error){
+                            api.toast({
+                                msg:error.msg,
+                                location:'middle'
+                            });
+                            return false;
+                        }
+                        if(res){
+                            $api.setStorage('mine',res.data);
+                            api.sendEvent({
+                                name: 'modify'
+                            });
+                            api.closeWin();
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: err_conf_007[ret.msg],
+                        location: 'middle'
+                    });
+                }
+            });
+
+        }
+        apiready=function(){
+            imgPath = get_loc_val('mine','avatar');
+            $('.avatar').attr('src', static_url + imgPath+'?s='+Math.random());
+            var nickName = isEmpty(get_loc_val('mine', 'nickName')) ? '' : get_loc_val('mine', 'nickName');
+            if (nickName) {
+                $('input[name=nickname]').val(nickName);
+            }
+            api.addEventListener({
+                name: 'photo_change'
+            }, function (ret, err) {
+                var value=ret.value;
+                imgPath = value.path;
+                $('.avatar').attr('src',static_url + value.path+'?s='+Math.random());
+                width = value.width;
+                $api.setStorage('width', width);
+                height = value.height;
+                $api.setStorage('height', height);
+            });
+        };
+
+

@@ -1,0 +1,24 @@
+extends ../layout/layout
+block head
+    title 未激活课程
+    link(rel='stylesheet', type='text/css', href='../css/cckt.css')
+block body
+    #mask
+        .setup
+            //头部
+            .setup_header.clearfix
+                .header_l.icon-arrow-left(tapmode,onclick='lx()')
+                .header_r.icon-close(onclick='lx()')
+                .header_c 设置
+            //-内容区
+            .erweima
+                img(src="../image/erweima.jpg")
+                p.about_title 财萃课堂
+                p.about_words 微信号：caicuiacca
+            -var An = ['微信公众号','官方微博','给财萃课堂好评']
+            include ../modules/tankung_list
+block scripts
+    script(type='text/javascript').
+        function lx(){ 
+            api.closeFrame();
+        }

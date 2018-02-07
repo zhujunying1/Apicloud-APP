@@ -1,0 +1,108 @@
+extends ../../layout/layout
+block head
+    title 设置
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    .info_box
+        .i_main
+            .head_tab
+                ul.cl
+                    -var aN=['学习课程','未激活课程','过期课程']
+                    each vN ,ind in aN
+                        li
+                            |#{vN}
+            .tab_con
+                ul.cl
+                    -for(var i =0; i<5; i++)
+                        li
+                            .class_icon
+                                i.icon-img-bg
+                                .update_time 2014-01-20
+                                .updata_class
+                            .class_name ACCA F1标准课
+                            .class_intro 上次学习到：Chapter 11 external environm...
+                            .study_progress
+                                .progress_tit 学习进度：
+                                    span 65%
+                                .progress_line
+                                    .line_box
+                            .teacher_intro
+                                .icon-img-bg
+                                .teacher_con
+                                    .teach_name 佟云云
+                                    .teacher_position 哈佛认证资深讲师
+                ul.no_activate.cl.hide
+                    -for(var i =0; i<3; i++)
+                        li
+                            .class_icon
+                                i.icon-img-bg
+                                .update_time 2014-01-20
+                                .updata_class
+                            .class_name ACCA F1标准课
+                            .class_intro 未学习
+                            .teacher_intro
+                                .icon-img-bg
+                                .teacher_con
+                                    .teach_name 佟云云
+                                    .teacher_position 哈佛认证资深讲师
+                            .atonce_btn
+                                .at_activate 马上激活
+                                    .activate_icon
+                ul.no_activate.cl.hide
+                    -for(var i =0; i<2; i++)
+                        li
+                            .class_icon
+                                i.icon-img-bg
+                                .update_time 2014-01-20
+                                .updata_class
+                            .class_name ACCA F1标准课
+                            .class_intro 上次学习到：Chapter 11 external environm...
+                            .class_video
+                                .video_box
+                                    .video_icon
+                                    .video_num
+                                        span.v_num 45
+                                        span.t_num / 70
+                                .note_box
+                                    .note_icon
+                                    .video_num
+                                        span.v_num 45
+                                        span.t_num / 70
+                            .study_progress
+                                .progress_line
+                                    .line_box
+                            .atonce_btn.reset_listen
+                                .at_activate 申请重听
+                                    .reset_listen
+                    li
+                        .class_icon
+                            i.icon-img-bg
+                            .update_time 2014-01-20
+                            .updata_class
+                        .class_name ACCA F1标准课
+                        .class_intro 上次学习到：Chapter 11 external environm...
+                        .class_video
+                            .video_box
+                                .video_icon
+                                .video_num
+                                    span.v_num 45
+                                    span.t_num / 70
+                            .note_box
+                                .note_icon
+                                .video_num
+                                    span.v_num 45
+                                    span.t_num / 70
+                        .study_progress
+                            .progress_line
+                                .line_box
+                        .buy_again
+                            .at_activate 再次购买
+block scripts
+    script.
+        $('.head_tab li').eq(0).addClass('itrems');
+        $('.head_tab li').click(function(){
+            $('.head_tab li').removeClass('itrems');
+            $(this).addClass('itrems');
+            var index = $('.head_tab li').index(this);
+            $('.tab_con > ul').eq(index).show().siblings().hide();
+        })

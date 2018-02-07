@@ -1,0 +1,30 @@
+mixin lst
+    h2  {{=it.res1[p].title}}
+    | {{var obj=it.res1[p].children;}}
+    | {{for(var pp in obj) { }}
+    ul.list-group.accordion
+        li.up_down
+            .title(tapmode,onclick="listToggle(this)")
+                i.icon-arrow-right
+                span {{=obj[pp].title}}
+            ul.list-group.list-liebiao
+                | {{var oob=obj[pp].children;}}
+                | {{for(var ppp in oob) { }}
+                li(tapmode, onclick="noteList(this)", data-key='{{=it.res1[p].id}}', data-id="{{=oob[ppp].id}}" title="{{=oob[ppp].title}}")
+                    .li-left
+                        span {{=oob[ppp].title}}
+                    .li-right
+                        dl.console(style="position:relative;")
+                            dd
+                                i.icon-edit
+                                | {{var id=oob[ppp].id;}}
+                                span.number {{=oob[ppp].nodeNum}}
+                                |{{if(!isEmpty(it.res2[id])&&it.res2[id]!=0){ }}
+                                span.msg-mark.msg-mark-mr {{=it.res2[id]>99?'99+':it.res2[id]}}
+                                |{{ } }}
+                    | {{ } }}
+    | {{ } }}
+script(id='tpl',type='text/x-dot-template')
+    | {{for(var p in it.res1) { }}
+    +lst
+    | {{ } }}

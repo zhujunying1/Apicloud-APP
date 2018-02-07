@@ -1,0 +1,32 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'bg-white'
+block head
+    title 消息中心
+block body
+    .info_des
+        ul
+            li
+                img.icon-img-bg
+                .info_examine
+                    .examine_tit
+                        .time_box
+                            span
+                    .examine_con
+block scripts
+    script(type='text/javascript').
+        apiready=function(){
+            $('.examine_tit').html(api.pageParam.title);
+            var time=sentTimeFormat(api.pageParam.sentTime);
+            $('.time_box span').html(time);
+            $('.examine_con').html(api.pageParam.content);
+            $('.icon-img-bg').attr('src',api.pageParam.img);
+        };
+        $('.btn-group.btn-success .btn').on('touchend',function(){
+            var i = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.info_des').eq(i).show().siblings('.info_des').hide();
+        });
+        function closeFrame(){
+            api.closeFrame();
+        }

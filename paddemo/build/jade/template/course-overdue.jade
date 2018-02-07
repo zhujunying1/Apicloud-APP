@@ -1,0 +1,126 @@
+extends ../layout/layout
+block head
+    title 在线课程-过期课程
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    ul.course-pic-list.overdue#content
+        //+lst
+    include ../modules/course-pic-list
+block scripts
+    script(type='text/javascript').
+        var pageSize = 10;
+        // 打开课程列表页面
+        function openCourse(co, ch, su, ca, cn) {
+        }
+        function getData(page) {
+        //                    var tpl = $('#tpl').html();
+        //                    var content = doT.template(tpl);
+        //                    if (page == 1) {
+        //                        $('#content').html(content(data));
+        //                    } else {
+        //                        $('#content').append(content(data));
+        //                    }
+        //            progressBar();
+        //                    return;
+            var param = {};
+            param.pageNo = page;
+            param.pageSize = pageSize;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/v2.1/learning/expirationcourse', 'get', param, function (ret, err) {//008.004.1 已过期课程
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success') {
+                    no_loaded=false;
+                    total = ret.data.total;
+                    var tpl = $('#tpl').html();
+                    var content = doT.template(tpl);
+                    var is_show;
+                    var systemType = api.systemType;  // 比如: ios
+                    if (systemType == 'ios') {
+                        is_show = isEmpty(ret.data.courselist.isdisplay) ?  false :  ret.data.courselist.isdisplay;
+                    } else {
+                        is_show = true;
+                    }
+                    if (page == 1) {
+                        if (isEmpty(ret.data) || total == 0) {
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        for(var p in ret.data.courselist){
+                            ret.data.courselist[p]['is_show']=is_show;
+                        }
+                        $('#content').html(content(ret.data.courselist));
+                    } else {
+                        for (var p in ret.data.courselist) {
+                            ret.data.courselist[p]['is_show'] = is_show;
+                        }
+                        $('#content').append(content(ret.data.courselist));
+                    }
+                    progressBar();
+                    api.parseTapmode();
+        //                    progressBar();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+        var total = 0;
+        var no_loaded=true;
+        apiready = function () {
+            getData(1);
+            var currentPage = 1;
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                getData(1);
+                currentPage = 1;
+            });
+            //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (currentPage < Math.ceil(total / pageSize)) {
+                    currentPage++;
+                    getData(currentPage);
+                }
+            });
+        };
+        function renew() {
+            var systemType = api.systemType;
+            if (systemType == 'ios') {
+               api.openApp({
+                    iosUrl: 'http://www.caicui.com/mc/examReport/add?token=' + $api.getStorage('token')
+                });
+            } else {
+                api.openApp({
+                    androidPkg: 'android.intent.action.VIEW',
+                    mimeType: 'text/html',
+                    uri: 'http://www.caicui.com/mc/examReport/add?token=' + $api.getStorage('token')
+                }, function (ret, err) {
+                });
+            }
+        }

@@ -1,0 +1,19 @@
+extends ../layout/layout
+block html
+    -var htmlclass = "transparent"
+block body
+    .backdrop.opacity(tapmode, onclick="api.closeFrame()")
+    ul.sort-menu.note-sort
+        -var vs = ['最新回复','发帖时间','精华讨论','回复数量']
+        -var vb = ['new','time','top','num']
+        -each as, i in vs
+            li(tapmode, onclick="sortTalk('" + vb[i] + "')")=as
+block scripts
+    script(type="text/javascript").
+        apiready = function () {
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                api.closeFrame();
+            })
+        };

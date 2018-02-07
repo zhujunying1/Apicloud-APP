@@ -1,0 +1,44 @@
+extends ../layout/layout
+block head
+   title 章程列表
+   link(rel='stylesheet', type='text/css', href='../css/cckt.css')
+block body
+   .row-sm
+      //头部
+      .header_jh
+         .hc_logo
+            i.zc_icon.icon-list-ul
+            img(src="../image/logo.png")
+      .col-left
+         -var liClass = 3
+      .col-right.col-right-jh
+         //-列表头
+         .hc_header.zclb_header
+            span 章程列表
+            p.icon-search.hc_shanchu
+         //列表内容
+         .hc_title
+            span  第一章  ACCA F1  Accountant in Business
+         //折叠列表 include ../modules/course-list
+         ul.list-group.accordion
+            -var aM = ['PART A Business organisational star','PART C Business organisational star and flruk']
+            each vM,i in aM
+               li(class= i == 0 ? 'open' : '')
+                  .title.list-toggle
+                     i.icon-arrow-down
+                     span=vM
+                  ul.list-group.list-liebiao
+                     -var aN = ['PART A Business organisational star','PART C Business organisational star and flruk','dfsafgsgfsgsgfddsg']
+                     each vN,ind in aN
+                        li
+                           .li-left
+                              //i.dot-status(class= ind == 0 ? 'icon-cir  cle-solid' : ind == 1 ? 'icon-circle-half' : 'icon-circle-hollow')
+                              span Chapter #{ind} - #{vN}
+                           .li-right
+                              dl.console.zc_console
+                                 dd
+                                    i.icon-edit
+                                    span.multiples 2
+                                    span.cirle_right 1
+
+

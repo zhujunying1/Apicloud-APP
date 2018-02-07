@@ -1,0 +1,102 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'bg-white detail-page'
+block head
+    title 笔记详情
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    input(name="extraData1",type="hidden",value="")
+    input(name="extraData2",type="hidden",value="")
+    .note-detail#content
+    mixin lst
+        dl.cont-list
+            dd
+                .footer
+                    .course-name
+                        | {{ if(!isEmpty(it.taskprogress)&&!isEmpty(it.taskType)){ }}
+                        .tag-video-time
+                            i.icon-play-o
+                            span#playTime(tapmode,onclick="jump_task('{{=it.taskprogress}}','{{=it.courseId}}','{{=it.taskId}}')") {{=formatType(it.taskType,it.taskprogress)}}
+                        | {{ } }}
+                        span.course-tit  {{=it.chaptername}}
+                    .time
+                        //i.overt 公开
+                        span {{if(!isEmpty(it.updateTime)) {  }}{{=formatDate(it.updateTime,'Y')+'-'+formatDate(it.updateTime,'M')+'-'+formatDate(it.updateTime,'D')}} {{ } }}
+                        span {{if(!isEmpty(it.updateTime)) {  }}{{=formatDate(it.updateTime,'h')+':'+formatDate(it.updateTime,'m')}} {{ } }}
+                        span {{=it.nikeName}}
+                .describe {{=!isEmpty(it.content)?it.content:''}}
+                |{{if(!isEmpty(it.soundPath) && it.soundlen>0) { }}
+                .voice-player(tapmode, url="{{=static_url+it.soundPath}}", onclick="playAudio(this)", bg, time="{{=it.soundlen}}")
+                |{{ } }}
+                |{{if(it.imgPath) { }}
+                .pic-group-detail
+                    |{{var imgPath=it.imgPath.split(','); }}
+                    |{{ for(var i in imgPath) { }}
+                    |{{if(i<=100) { }}
+                    img(src="{{=static_url+imgPath[i]}}")
+                    |{{ } }}
+                    |{{ } }}
+                    //-b 共{{=it.imgPath.split(',').length}}张
+                |{{ } }}
+    script(id='tpl',type='text/x-dot-template')
+        +lst
+block scripts
+    script(type='text/javascript').
+        function getData() {
+            var param = {};
+            param.id =api.pageParam.id;
+            param.token = $api.getStorage('token');
+            if(show_pro&&no_loaded){
+                api.showProgress({
+                    title: '加载中',
+                    modal: false
+                });
+            }
+            ajaxRequest('api/studytools/nodedetail/v2.1', 'get', param, function (ret, err) {//003.114
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                    no_loaded=false;
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                var tpl = $('#tpl').html();
+                var content = doT.template(tpl);
+                if (ret && ret.state == 'success') {
+                    $('#content').html(content(ret.data));
+                    $('input[name=extraData1]').val(ret.data.memberId);
+                    $('input[name=extraData2]').val(ret.data.id);
+                    audioDom();
+                    api.parseTapmode();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+        var no_loaded = true;
+        apiready = function () {
+            getData();
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                api.closeFrame();
+            });
+        };
+        function openImageBrower(arr, i) {
+            //图片浏览器打开
+            var obj = api.require('imageBrowser');
+            obj.openImages({
+                imageUrls: arr.split(','),
+                activeIndex: i
+            });
+        }
+
+
+

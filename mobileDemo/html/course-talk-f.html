@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/common-component.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <link rel="stylesheet" href="../css/about-note.css">
+    <link rel="stylesheet" href="../css/Sstyle.css">
+    <style>
+    	.icon-comment{
+    		font-size: 0.5rem;
+		    vertical-align: middle;
+		    padding-right: 0.2rem;
+    	}
+    	.talk-right2{
+    		position: absolute;
+    		right: 0.8rem;
+    		font-size: 0.28rem;
+    	}
+    	.talk-right2 b{
+    		background: #ff9dab;
+		    padding: 0 0.04rem 0 0.04rem;
+		    font-size: 0.28rem;
+		    vertical-align: middle;
+		    color: #fff;
+		    height: 0.28rem;
+		    display: inline-block;
+		    line-height: 0.28rem;
+    	}
+    	.talk-right b{
+    		background: #42b1ab;
+		    padding: 0 0.04rem 0 0.04rem;
+		    font-size: 0.28rem;
+		    vertical-align: middle;
+		    color: #fff;
+		    height: 0.28rem;
+		    display: inline-block;
+		    line-height: 0.28rem;
+    	}
+    </style>
+  </head>
+  <body>
+    <div style="margin-bottom:0;" class="my-talk">
+      <!-- 广告-->
+      <div id="content"></div>
+      <div tapmode onclick="more('course-talk-top')" class="courseStudyMore"><i class="icon-comment"></i>更多交流</div>
+    </div>
+    <script id="tpl" type="text/x-dot-template">{{if(it[0].adpic) { }}
+          <div class="Advertisement"><img src="{{=static_url+it[0].adpic}}" class="AdvertisementPic"><img src="../image/close.png" onclick="close_ad()" tapmode class="closeAdvertisement"></div>{{ } }}
+          {{for(var p in it) { }}
+          {{ if(!isEmpty(it[p].toporder)&&it[p].toporder){ }}
+          <ul class="toTopList">
+            <!--li(tapmode='tapcolor', onclick="to_detail(this)",data-id="{{=it[p].id}}",chapterId="{{=it[p].charpterId}}",memberId="{{=it[p].memberId}}",subjectId="{{=it[p].subjectId}}",categoryId="{{=it[p].categoryId}}")-->
+            <li tapmode="tapcolor" onclick="next('talk-detail','{{=it[p].categoryId}}','{{=it[p].subjectId}}','{{=it[p].id}}','{{=it[p].charpterId}}','{{=it[p].memberId}}','{{=it[p].taskId}}','{{=it[p].taskProgress}}','{{=it[p].taskType}}','{{=it[p].courseId}}')"><span class="toTop">置顶</span><span>{{=it[p].title}}</span></li>
+          </ul>{{ }else { }}
+          <div class="talk-content my-talk-content">
+            <div class="my-talk-list">
+              <!-- 用户信息-->
+              <div class="my-talk-wrap">
+                <div class="talk-user clear-fix">{{if(it[p].headImg){ }}
+                  <div class="takl-user-photo"><img src="{{=static_url+it[p].headImg}}" alt=""></div>{{ } }}
+                  <div class="talk-user-message clear-fix">
+                    <p class="line-1"><span>{{=it[p].nikeName}}</span>{{if(it[p].levelimg) { }}<img src="{{=static_url+it[p].levelimg}}" alt="">{{ } }}<span class="talk-right2"><img src="../image/like.png" alt="" class="t-img-message"><b>{{=!isEmpty(it[p].praiseCount)?it[p].praiseCount:0}}</b></span><span class="talk-right"><img src="../image/mess.png" alt="" class="t-img-message"><b>{{=!isEmpty(it[p].replyCount)?it[p].replyCount:0}}</b></span></p>
+                    <p><span>{{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{ } }}</span><span>{{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}}{{ } }}</span></p>
+                  </div>
+                </div>
+                <!-- 讨论内容-->
+                <div tapmode="tapcolor" class="talk-content-describe">
+                  <div tapmode onclick="next('talk-detail','{{=it[p].categoryId}}','{{=it[p].subjectId}}','{{=it[p].id}}','{{=it[p].charpterId}}','{{=it[p].memberId}}','{{=it[p].taskId}}','{{=it[p].taskProgress}}','{{=it[p].taskType}}','{{=it[p].courseId}}')" class="current-talk">
+                    <h5>
+                    {{ if(it[p].bbstype == "0") { }}
+                                                            【讨论】
+                    {{ }else if(it[p].bbstype == "1") { }}
+                                                           【问答】
+                    {{ } }}
+                    {{=it[p].title}}
+                    </h5>
+                    <p>{{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}</p>
+                  </div>{{ if(!isEmpty(it[p].imgPath)) { }}
+                  <ul class="pic-group">
+                    {{ var imgPath=it[p].imgPath.split(','),imgPathArr=[];}}
+                    {{ for(var j in imgPath) { }}
+                    	{{ if(!isEmpty(imgPath[j])) { }}
+                    		{{ imgPathArr.push(imgPath[j]);}}
+                    	{{ } }}
+                    {{ } }}
+                    {{ for(var i in imgPathArr) { }}                    
+                    {{var imgPathList=getImgPath('{{=imgPathArr[i]}}');}}
+                    {{if(i<=2) { }}
+                    <li style="background-image:url({{=imgPathList}})" tapmode onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')"></li>{{ } }}
+                    {{ } }}                   
+                    {{if(imgPathArr.length>=3) { }}<b>共{{=imgPathArr.length}}张</b>{{ } }}
+                  </ul>{{ } }}
+                </div>
+              </div>{{if(it[p].coursename) { }}
+              <div class="my-talk-bottm none"><span>{{=it[p].coursename}}</span></div>{{ } }}
+            </div>
+          </div>{{ } }}
+          {{ } }}
+    </script>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript">
+      var pagesize = 10;
+      var is_loding = false;
+//    var ret = {"totalCount":665,"pageNo":"1","pageSize":"20","data":[{"categoryId":" ","subjectId":"ff808081486933e601489c7a1aa20869","courseId":"8a22ecb5554cfedf015551f32c4a0047","chapterId":"8a22ecb5554cfedf0155528579970079","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u7b2c\u4e00\u7ae0 \u8d22\u52a1\u62a5\u8868\u5206\u6790\u57fa\u7840","taskId":"8a22ecb5554cfedf01555291504a0081","taskType":" ","taskprogress":"1062","favoriteCount":"0","replyCount":"0","clickCount":"4","title":"\u6d41\u52a8\u8d44\u4ea7\u589e\u52a0\u4e0e\u52a0\u51cf\u6cd5\u7684\u5173\u7cfb","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"4","taskCurrent":"3","pid":"53785","uid":"37810","soundPath":" ","soundlen":"0","updateTime":"1494506324","clientType":"pc","content":"\u5728\u5bf9\u6d41\u52a8\u8d44\u4ea7\u51cf\u5c11\u505a\u52a0\u6cd5\u4e0a\uff0c\u60a8\u4ee5\u5b58\u8d27\u4e3e\u4f8b\uff0c\u5b58\u8d27\u51cf\u5c11\u5bf9\u51c0\u5229\u6da6\u662f\u6709\u76ca\u3002\u4f46\u5982\u679c\u73b0\u91d1\u6216\u5176\u4ed6\u6d41\u52a8\u8d44\u4ea7\u51cf\u5c11\u7684\u8bdd\uff0c\u90a3\u8fd8\u5e94\u8be5\u505a\u52a0\u6cd5\u5417","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"miaoyi","is_avatar":"0","avatar_default":"0","memberId":"8a22ecb55b9e1255015bb20c59cd086e","isdelete":0,"id":"40356","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_0.png","contentHtml":"<p>\u5728\u5bf9\u6d41\u52a8\u8d44\u4ea7\u51cf\u5c11\u505a\u52a0\u6cd5\u4e0a\uff0c\u60a8\u4ee5\u5b58\u8d27\u4e3e\u4f8b\uff0c\u5b58\u8d27\u51cf\u5c11\u5bf9\u51c0\u5229\u6da6\u662f\u6709\u76ca\u3002\u4f46\u5982\u679c\u73b0\u91d1\u6216\u5176\u4ed6\u6d41\u52a8\u8d44\u4ea7\u51cf\u5c11\u7684\u8bdd\uff0c\u90a3\u8fd8\u5e94\u8be5\u505a\u52a0\u6cd5\u5417<\/p>","isdisplay":true,"contentSummary":"\u5728\u5bf9\u6d41\u52a8\u8d44\u4ea7\u51cf\u5c11\u505a\u52a0\u6cd5\u4e0a\uff0c\u60a8\u4ee5\u5b58\u8d27\u4e3e\u4f8b\uff0c\u5b58\u8d27\u51cf\u5c11\u5bf9\u51c0\u5229\u6da6\u662f\u6709\u76ca\u3002\u4f46\u5982\u679c\u73b0\u91d1\u6216\u5176\u4ed6\u6d41\u52a8\u8d44\u4ea7\u51cf\u5c11\u7684\u8bdd\uff0c\u90a3\u8fd8\u5e94\u8be5\u505a\u52a0\u6cd5\u5417","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22c0243e003b","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b93 \u671f\u671b\u503c\u5206\u6790","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"10","title":"A\u600e\u4e48\u7406\u89e3\uff1f","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53764","uid":"32487","soundPath":" ","soundlen":"0","updateTime":"1494493241","clientType":"pc","content":"\u5e94\u8be5\u7b97\u5404\u989c\u8272\u7403\u88ab\u62ff\u51fa\u7684\u6982\u7387\u7684\u548c\u5427\uff1f\u76f8\u52a0\u540e\u5e94\u8be5\u4e3a1 \u554a\uff0c\u4e3a\u4ec0\u4e48\u9009A","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"wangshaozhen","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb5598262b50159a1b680ea1b26","isdelete":0,"id":"40348","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb5598262b50159a1b680ea1b26.jpg","contentHtml":"<p>\u5e94\u8be5\u7b97\u5404\u989c\u8272\u7403\u88ab\u62ff\u51fa\u7684\u6982\u7387\u7684\u548c\u5427\uff1f\u76f8\u52a0\u540e\u5e94\u8be5\u4e3a1 \u554a\uff0c\u4e3a\u4ec0\u4e48\u9009A<\/p>","isdisplay":true,"contentSummary":"\u5e94\u8be5\u7b97\u5404\u989c\u8272\u7403\u88ab\u62ff\u51fa\u7684\u6982\u7387\u7684\u548c\u5427\uff1f\u76f8\u52a0\u540e\u5e94\u8be5\u4e3a1 \u554a\uff0c\u4e3a\u4ec0\u4e48\u9009A","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":" ","categoryName":" ","subjectName":" ","courseName":" ","chapterName":" ","taskId":" ","taskType":" ","taskprogress":"-1","favoriteCount":"0","replyCount":"1","clickCount":"16","title":"A\u4e3a\u4ec0\u4e48\u4e0d\u5bf9\uff0c\u7ade\u4e89\u5bf9\u624b\u6280\u672f\u53d8\u5f3a\u4e86\uff0c\u6d88\u8d39\u8005\u5c31\u53ef\u4ee5\u9009\u62e9\u7ade\u4e89\u5bf9\u624b\u4e86\uff0c\u8bae\u4ef7\u80fd\u529b\u5c31\u4f1a\u63d0\u9ad8\u554a","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53703","uid":"35553","soundPath":" ","soundlen":"0","updateTime":"1494426383","clientType":"pc","content":"","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"http:\/\/static.caicui.com\/\/upload\/2017\/05\/10\/AFF9AD262CD34326B3AEE4C6A55562B5.png,","userlevel":1,"userlevelid":"101","nikeName":"jiangtongrui","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55afe3d1d015b099cb8365590","isdelete":0,"id":"40325","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55afe3d1d015b099cb8365590.jpg","contentHtml":"<p><br><img src=\"http:\/\/static.caicui.com\/\/upload\/2017\/05\/10\/AFF9AD262CD34326B3AEE4C6A55562B5.png\" width=\"913\" height=\"329\"><\/p>","isdisplay":true,"contentSummary":"","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c7a1aa20869","courseId":"8a22ecb5559bad0501559fe3297e0039","chapterId":"8a22ecb5570dce51015722a9042f0041","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-2","courseName":"CMA Part II \u4e2d\u6587 \u57fa\u7840\u8bfe","chapterName":"\u7b2c\u4e00\u8282 \u672c\/\u91cf\/\u5229\u5206\u6790","taskId":"8a22ecb5570dce5101572383ee790053","taskType":"video","taskprogress":"391","favoriteCount":"0","replyCount":"1","clickCount":"14","title":"\u8bf7\u95ee","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53664","uid":"33810","soundPath":" ","soundlen":"0","updateTime":"1494407130","clientType":"iphone","content":"\u4e3a\u4ec0\u4e48\u53d8\u52a8\u6210\u672c\u7528\u7684\u662f\u53d8\u52a8\u9500\u552e\u548c\u7ba1\u7406\u8d39\u7528\u800c\u4e0d\u662f\u53d8\u52a8\u5236\u9020\u6210\u672c\uff1f\u90a3\u4e3a\u4ec0\u4e48\u56fa\u5b9a\u6210\u672c\u7528\u7684\u662f\u56fa\u5b9a\u5236\u9020\u6210\u672c\u800c\u6ca1\u6709\u56fa\u5b9a\u9500\u552e\u548c\u7ba1\u7406\u8d39\u7528\u548c\u56fa\u5b9a\u548c\u5176\u4ed6\u7ba1\u7406\u8d39\u7528\uff1f\u8c22\u8c22\u8001\u5e08","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"app8ckc","is_avatar":"1","avatar_default":"8","memberId":"8a22ecb55a1bbbce015a8851bc2c2e76","isdelete":0,"id":"40308","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55a1bbbce015a8851bc2c2e76.jpg","contentHtml":"\u4e3a\u4ec0\u4e48\u53d8\u52a8\u6210\u672c\u7528\u7684\u662f\u53d8\u52a8\u9500\u552e\u548c\u7ba1\u7406\u8d39\u7528\u800c\u4e0d\u662f\u53d8\u52a8\u5236\u9020\u6210\u672c\uff1f\u90a3\u4e3a\u4ec0\u4e48\u56fa\u5b9a\u6210\u672c\u7528\u7684\u662f\u56fa\u5b9a\u5236\u9020\u6210\u672c\u800c\u6ca1\u6709\u56fa\u5b9a\u9500\u552e\u548c\u7ba1\u7406\u8d39\u7528\u548c\u56fa\u5b9a\u548c\u5176\u4ed6\u7ba1\u7406\u8d39\u7528\uff1f\u8c22\u8c22\u8001\u5e08","isdisplay":true,"contentSummary":"\u4e3a\u4ec0\u4e48\u53d8\u52a8\u6210\u672c\u7528\u7684\u662f\u53d8\u52a8\u9500\u552e\u548c\u7ba1\u7406\u8d39\u7528\u800c\u4e0d\u662f\u53d8\u52a8\u5236\u9020\u6210\u672c\uff1f\u90a3\u4e3a\u4ec0\u4e48\u56fa\u5b9a\u6210\u672c\u7528\u7684\u662f\u56fa\u5b9a\u5236\u9020\u6210\u672c\u800c\u6ca1\u6709\u56fa\u5b9a\u9500\u552e\u548c\u7ba1\u7406\u8d39\u7528\u548c\u56fa\u5b9a\u548c\u5176\u4ed6\u7ba1\u7406\u8d39\u7528\uff1f\u8c22\u8c22\u8001\u5e08","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22906ce30034","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b94 \u6218\u7565\u89c4\u5212\u5de5\u5177 5C\u548cPEST\u5206\u6790","taskId":"bba025cc75a6d6e24698846f80d96c3a","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"13","title":"bcd\u9009\u9879\u90fd\u4e0d\u592a\u660e\u767d","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53647","uid":"25185","soundPath":" ","soundlen":"0","updateTime":"1494390317","clientType":"pc","content":"b\u9650\u5236\u8fdb\u53e3\u7535\u52a8\u6c7d\u8f66\u548c\u5176\u4ed6\u8f66\u8f86\u7684\u610f\u601d\u4e0d\u662f\u5c11\u4e86\u8fdb\u53e3\u7535\u52a8\u8f66\uff0c\u8fd9\u6837\u4f01\u4e1a\u5728\u5e02\u573a\u4e0a\u7684\u7ade\u4e89\u4e0d\u5c31\u4e0d\u6fc0\u70c8\u5417\uff1f\u8fd9\u662f\u7ade\u4e89\u4f18\u52bf\u5440...\uff1f\u8bf7\u95eec\u548cd\u9009\u9879\u6709\u4ec0\u4e48\u533a\u522b\uff1f","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"yesyipsze","is_avatar":"1","avatar_default":"6","memberId":"8a22ecb5576a979a0157a1f77e271fdd","isdelete":0,"id":"40298","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb5576a979a0157a1f77e271fdd.jpg","contentHtml":"<p>b\u9650\u5236\u8fdb\u53e3\u7535\u52a8\u6c7d\u8f66\u548c\u5176\u4ed6\u8f66\u8f86\u7684\u610f\u601d\u4e0d\u662f\u5c11\u4e86\u8fdb\u53e3\u7535\u52a8\u8f66\uff0c\u8fd9\u6837\u4f01\u4e1a\u5728\u5e02\u573a\u4e0a\u7684\u7ade\u4e89\u4e0d\u5c31\u4e0d\u6fc0\u70c8\u5417\uff1f\u8fd9\u662f\u7ade\u4e89\u4f18\u52bf\u5440...\uff1f\u8bf7\u95eec\u548cd\u9009\u9879\u6709\u4ec0\u4e48\u533a\u522b\uff1f<\/p>","isdisplay":true,"contentSummary":"b\u9650\u5236\u8fdb\u53e3\u7535\u52a8\u6c7d\u8f66\u548c\u5176\u4ed6\u8f66\u8f86\u7684\u610f\u601d\u4e0d\u662f\u5c11\u4e86\u8fdb\u53e3\u7535\u52a8\u8f66\uff0c\u8fd9\u6837\u4f01\u4e1a\u5728\u5e02\u573a\u4e0a\u7684\u7ade\u4e89\u4e0d\u5c31\u4e0d\u6fc0\u70c8\u5417\uff1f\u8fd9\u662f\u7ade\u4e89\u4f18\u52bf\u5440...\uff1f\u8bf7\u95eec\u548cd\u9009\u9879\u6709\u4ec0\u4e48\u533a\u522b\uff1f","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22ccdcfa0044","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-1","courseName":"CMA Part I \u4e2d\u6587 \u57fa\u7840\u8bfe","chapterName":"\u77e5\u8bc6\u70b92 \u5b9e\u9645\u3001\u6b63\u5e38\u3001\u6807\u51c6\u6210\u672c\u6cd5","taskId":"8a22ecb5557730db01557ce1e17e009c","taskType":"video","taskprogress":"304","favoriteCount":"0","replyCount":"1","clickCount":"22","title":"\u95f4\u63a5\u6210\u672c\u9884\u5b9a\u5206\u914d\u7387\u7684\u8ba1\u7b97","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53645","uid":"33580","soundPath":" ","soundlen":"0","updateTime":"1494388551","clientType":"aphone","content":"\u8bb2\u4e49\u4e2d,\u95f4\u63a5\u6210\u672c\u9884\u5b9a\u5206\u914d\u7387=\u9884\u7b97\u5de5\u5382\u95f4\u63a5\u6210\u672c\/\u4f30\u7b97\u7684\u6210\u672c\u52a8\u56e0\u603b\u6570\u91cf\uff1b\n\u800c\u4e60\u9898\u4e2d\u8ba1\u7b97\u65f6\u7528\u7684\u662f\u4e3b\u8981\u6210\u672c\u52a8\u56e0\uff08\u76f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f625\uff09\u800c\u4e0d\u662f\u6210\u672c\u52a8\u56e0\u603b\u6570\u91cf\uff08\u76f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f625+\u95f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f65\uff09\uff0c\u600e\u4e48\u7406\u89e3\uff1f\n\u8c22\u8c22\u8001\u5e08~","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"\/upload\/2017\/05\/10\/E7822E192F944EBD9347822BC2BFBEEE.jpg,\/upload\/2017\/05\/10\/991AE7E2AEBF478096FDA5A17573F233.jpg","userlevel":1,"userlevelid":"101","nikeName":"Etak","is_avatar":"1","avatar_default":"6","memberId":"8a22ecb55a1bbbce015a746963be24eb","isdelete":0,"id":"40296","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55a1bbbce015a746963be24eb.jpg","contentHtml":"\u8bb2\u4e49\u4e2d,\u95f4\u63a5\u6210\u672c\u9884\u5b9a\u5206\u914d\u7387=\u9884\u7b97\u5de5\u5382\u95f4\u63a5\u6210\u672c\/\u4f30\u7b97\u7684\u6210\u672c\u52a8\u56e0\u603b\u6570\u91cf\uff1b\n\u800c\u4e60\u9898\u4e2d\u8ba1\u7b97\u65f6\u7528\u7684\u662f\u4e3b\u8981\u6210\u672c\u52a8\u56e0\uff08\u76f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f625\uff09\u800c\u4e0d\u662f\u6210\u672c\u52a8\u56e0\u603b\u6570\u91cf\uff08\u76f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f625+\u95f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f65\uff09\uff0c\u600e\u4e48\u7406\u89e3\uff1f\n\u8c22\u8c22\u8001\u5e08~","isdisplay":true,"contentSummary":"\u8bb2\u4e49\u4e2d,\u95f4\u63a5\u6210\u672c\u9884\u5b9a\u5206\u914d\u7387=\u9884\u7b97\u5de5\u5382\u95f4\u63a5\u6210\u672c\/\u4f30\u7b97\u7684\u6210\u672c\u52a8\u56e0\u603b\u6570\u91cf\uff1b\n\u800c\u4e60\u9898\u4e2d\u8ba1\u7b97\u65f6\u7528\u7684\u662f\u4e3b\u8981\u6210\u672c\u52a8\u56e0\uff08\u76f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f625\uff09\u800c\u4e0d\u662f\u6210\u672c\u52a8\u56e0\u603b\u6570\u91cf\uff08\u76f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f625+\u95f4\u63a5\u4eba\u5de5\u603b\u5c0f\u65f65\uff09\uff0c\u600e\u4e48\u7406\u89e3\uff1f\n\u8c22\u8c22\u8001\u5e08~","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22c0243e003b","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-1","courseName":"CMA Part I \u4e2d\u6587 \u57fa\u7840\u8bfe","chapterName":"\u77e5\u8bc6\u70b93 \u671f\u671b\u503c\u5206\u6790","taskId":"8a22ecb55575d41f015576a8210f0039","taskType":"video","taskprogress":"263","favoriteCount":"0","replyCount":"1","clickCount":"7","title":"\u8054\u5408\u6295\u8d44\u5931\u8d25\u600e\u4e48\u529e\uff1f","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53545","uid":"37984","soundPath":" ","soundlen":"0","updateTime":"1494306240","clientType":"aphone","content":"\u4e8f\u4e861500\u4e07\u6bd4\u65b9\u6848\u4e8c\u60e8\u591a\u4e86\u2026","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"\u5fc5\u6210\u8d85\u7ea7\u65e0\u654c\u5b66\u4e60\u6700\u52aa\u529b","is_avatar":"1","avatar_default":"8","memberId":"8a22ecb55b9e1255015bc130fa370c8e","isdelete":0,"id":"40257","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55b9e1255015bc130fa370c8e.jpg","contentHtml":"\u4e8f\u4e861500\u4e07\u6bd4\u65b9\u6848\u4e8c\u60e8\u591a\u4e86\u2026","isdisplay":true,"contentSummary":"\u4e8f\u4e861500\u4e07\u6bd4\u65b9\u6848\u4e8c\u60e8\u591a\u4e86\u2026","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22c2f362003f","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b92 \u8425\u8fd0\u9884\u7b97--\u751f\u4ea7\u6210\u672c&\u9500\u8d27\u6210\u672c\u9884\u7b97","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"16","title":"D\u9009\u9879\u4e0e\u516c\u5f0f\u4e0d\u7b26\uff0c\u662f\u4ec0\u4e48\u60c5\u51b5\uff1f","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53465","uid":"36230","soundPath":" ","soundlen":"0","updateTime":"1494247059","clientType":"pc","content":"\u6309\u7167\u516c\u5f0f\uff0c\u672c\u671f\u91c7\u8d2d\u91cf=\u672c\u671f\u8017\u7528\u91cf+\u671f\u672b\u5e93\u5b58\u91cf-\u671f\u521d\u5e93\u5b58\u91cf","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"yaoyuefeng","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55b225943015b2396f424012e","isdelete":0,"id":"40220","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55b225943015b2396f424012e.jpg","contentHtml":"<p>\u6309\u7167\u516c\u5f0f\uff0c\u672c\u671f\u91c7\u8d2d\u91cf=\u672c\u671f\u8017\u7528\u91cf+\u671f\u672b\u5e93\u5b58\u91cf-\u671f\u521d\u5e93\u5b58\u91cf<\/p>","isdisplay":true,"contentSummary":"\u6309\u7167\u516c\u5f0f\uff0c\u672c\u671f\u91c7\u8d2d\u91cf=\u672c\u671f\u8017\u7528\u91cf+\u671f\u672b\u5e93\u5b58\u91cf-\u671f\u521d\u5e93\u5b58\u91cf","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b228f54e00031","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b91 \u6218\u7565\u89c4\u5212\u6982\u8ff0","taskId":"91e6a108c22e0e440e9f3ad3b106042a","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"24","title":"\u8bf7\u95eeb\u548cd\uff1f","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53381","uid":"25185","soundPath":" ","soundlen":"0","updateTime":"1494163210","clientType":"pc","content":"\u8bf7\u95eeb\u548cd\u6307\u7684\u662f\u4ec0\u4e48\uff1f","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"yesyipsze","is_avatar":"1","avatar_default":"6","memberId":"8a22ecb5576a979a0157a1f77e271fdd","isdelete":0,"id":"40191","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb5576a979a0157a1f77e271fdd.jpg","contentHtml":"<p>\u8bf7\u95eeb\u548cd\u6307\u7684\u662f\u4ec0\u4e48\uff1f<br><\/p>","isdisplay":true,"contentSummary":"\u8bf7\u95eeb\u548cd\u6307\u7684\u662f\u4ec0\u4e48\uff1f","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b228f54e00031","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b91 \u6218\u7565\u89c4\u5212\u6982\u8ff0","taskId":"91e6a108c22e0e440e9f3ad3b106042a","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"17","title":"c\u9009\u9879","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53380","uid":"25185","soundPath":" ","soundlen":"0","updateTime":"1494162963","clientType":"pc","content":"\u4e3a\u4ec0\u4e48\u4e0d\u80fd\u662f\u9009\u9879c\uff1f\u4eca\u5e74\u4e5f\u7b97\u662f\u77ed\u671f\u89c4\u5212\u5440\uff0c\u4e0d\u662fc\u5417\uff1f","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"yesyipsze","is_avatar":"1","avatar_default":"6","memberId":"8a22ecb5576a979a0157a1f77e271fdd","isdelete":0,"id":"40190","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb5576a979a0157a1f77e271fdd.jpg","contentHtml":"<p>\u4e3a\u4ec0\u4e48\u4e0d\u80fd\u662f\u9009\u9879c\uff1f<\/p><p>\u4eca\u5e74\u4e5f\u7b97\u662f\u77ed\u671f\u89c4\u5212\u5440\uff0c\u4e0d\u662fc\u5417\uff1f<\/p>","isdisplay":true,"contentSummary":"\u4e3a\u4ec0\u4e48\u4e0d\u80fd\u662f\u9009\u9879c\uff1f\u4eca\u5e74\u4e5f\u7b97\u662f\u77ed\u671f\u89c4\u5212\u5440\uff0c\u4e0d\u662fc\u5417\uff1f","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb553eab1280153f36f380a007f","chapterId":"8a22ecb55b1ec7e9015b428ee9ae0642","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-1","courseName":"CMA Part I \u4e2d\u6587 \u524d\u5bfc","chapterName":"\u77e5\u8bc6\u70b92 \u7ba1\u7406\u4f1a\u8ba1\u7684\u804c\u80fd","taskId":"8a22ecb553eab12801540472130c00bf","taskType":"video","taskprogress":"590","favoriteCount":"0","replyCount":"1","clickCount":"14","title":"\u7ba1\u7406\u4f1a\u8ba1\u5e08\u7684\u804c\u80fd","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53354","uid":"37959","soundPath":" ","soundlen":"0","updateTime":"1494132117","clientType":"aphone","content":"\u7ba1\u7406\u4f1a\u8ba1\u5e08\u53ea\u662f\u53c2\u4e0e\u51b3\u7b56\uff0c\u4f46\u662f\u4ed6\u4e0d\u505a\u6700\u7ec8\u7684\u51b3\u5b9a\uff0c\u4ec5\u4ec5\u662f\u5e2e\u52a9\u51b3\u7b56\u8005\u627e\u51fa\u6700\u4f18\u65b9\u6848\u3002\u5bf9\u5417\uff1f","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"caipengshuai","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55b9e153a015bb8a4e48347e5","isdelete":0,"id":"40173","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55b9e153a015bb8a4e48347e5.jpg","contentHtml":"\u7ba1\u7406\u4f1a\u8ba1\u5e08\u53ea\u662f\u53c2\u4e0e\u51b3\u7b56\uff0c\u4f46\u662f\u4ed6\u4e0d\u505a\u6700\u7ec8\u7684\u51b3\u5b9a\uff0c\u4ec5\u4ec5\u662f\u5e2e\u52a9\u51b3\u7b56\u8005\u627e\u51fa\u6700\u4f18\u65b9\u6848\u3002\u5bf9\u5417\uff1f","isdisplay":true,"contentSummary":"\u7ba1\u7406\u4f1a\u8ba1\u5e08\u53ea\u662f\u53c2\u4e0e\u51b3\u7b56\uff0c\u4f46\u662f\u4ed6\u4e0d\u505a\u6700\u7ec8\u7684\u51b3\u5b9a\uff0c\u4ec5\u4ec5\u662f\u5e2e\u52a9\u51b3\u7b56\u8005\u627e\u51fa\u6700\u4f18\u65b9\u6848\u3002\u5bf9\u5417\uff1f","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c7a1aa20869","courseId":"8a22ecb5559bad0501559fe3297e0039","chapterId":"8a22ecb5566c7aea01566e4d1d8d000a","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u7b2c\u56db\u8282 \u8425\u8fd0\u8d44\u672c\u7ba1\u7406","taskId":"91d903258d863c94b80a1e7588fd7ace","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"15","title":"\u5982\u4e0b","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"17","taskCurrent":"7","pid":"53322","uid":"34978","soundPath":" ","soundlen":"0","updateTime":"1494080177","clientType":"pc","content":"\u8bf7\u95ee\u8001\u5e08\uff0cD\u9009\u9879\u4e3a\u4ec0\u4e48\u4e0d\u5bf9","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"http:\/\/static.caicui.com\/\/upload\/2017\/05\/06\/EAD70F07E0BD4A3A8DFFDC187EDCF88A.PNG,","userlevel":1,"userlevelid":"101","nikeName":"\u4e2d\u56fd\u5973\u5175","is_avatar":"1","avatar_default":"8","memberId":"8a22ecb55acc8fb0015ada2055e3075e","isdelete":0,"id":"40154","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55acc8fb0015ada2055e3075e.jpg","contentHtml":"<p>\u8bf7\u95ee\u8001\u5e08\uff0cD\u9009\u9879\u4e3a\u4ec0\u4e48\u4e0d\u5bf9<br><img src=\"http:\/\/static.caicui.com\/\/upload\/2017\/05\/06\/EAD70F07E0BD4A3A8DFFDC187EDCF88A.PNG\" width=\"534\" height=\"386\"><\/p>","isdisplay":true,"contentSummary":"\u8bf7\u95ee\u8001\u5e08\uff0cD\u9009\u9879\u4e3a\u4ec0\u4e48\u4e0d\u5bf9","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c7a1aa20869","courseId":"8a22ecb5559bad0501559fe3297e0039","chapterId":"8a22ecb5566c7aea01566e4d1d8d000a","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u7b2c\u56db\u8282 \u8425\u8fd0\u8d44\u672c\u7ba1\u7406","taskId":"91d903258d863c94b80a1e7588fd7ace","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"7","title":"\u5982\u4e0b","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"17","taskCurrent":"7","pid":"53300","uid":"34978","soundPath":" ","soundlen":"0","updateTime":"1494076315","clientType":"pc","content":"5\u6708\u4efd\u73b0\u91d1\u6d41\u51fa7000000\uff0c\u662f\u5df2\u7ecf\u6d41\u51fa\u4e86\uff0c\u800c\u4f605\u6708\u521d\u53ea\u67094000000\uff0c\u6240\u4ee5\u5e94\u8be5\u662f5\u6708\u4efd\u5c31\u8981\u501f\u51653000000\uff0c\u53ef\u7b54\u6848\u4e2d\u4e3a\u4ec0\u4e48\u8bf4\u4e3a6\u6708\u4efd\u501f\u51653000000","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"http:\/\/static.caicui.com\/\/upload\/2017\/05\/06\/F0BF618EE36C4DC6A2C673BF9F17BE2A.PNG,http:\/\/static.caicui.com\/\/upload\/2017\/05\/06\/123D7C8FA191404CB01CB5CE217FA71F.PNG,","userlevel":1,"userlevelid":"101","nikeName":"\u4e2d\u56fd\u5973\u5175","is_avatar":"1","avatar_default":"8","memberId":"8a22ecb55acc8fb0015ada2055e3075e","isdelete":0,"id":"40149","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55acc8fb0015ada2055e3075e.jpg","contentHtml":"<p>5\u6708\u4efd\u73b0\u91d1\u6d41\u51fa7000000\uff0c\u662f\u5df2\u7ecf\u6d41\u51fa\u4e86\uff0c\u800c\u4f605\u6708\u521d\u53ea\u67094000000\uff0c\u6240\u4ee5\u5e94\u8be5\u662f5\u6708\u4efd\u5c31\u8981\u501f\u51653000000\uff0c\u53ef\u7b54\u6848\u4e2d\u4e3a\u4ec0\u4e48\u8bf4\u4e3a6\u6708\u4efd\u501f\u51653000000<br><img src=\"http:\/\/static.caicui.com\/\/upload\/2017\/05\/06\/F0BF618EE36C4DC6A2C673BF9F17BE2A.PNG\" width=\"769\" height=\"513\"><br><img src=\"http:\/\/static.caicui.com\/\/upload\/2017\/05\/06\/123D7C8FA191404CB01CB5CE217FA71F.PNG\" width=\"711\" height=\"399\"><\/p>","isdisplay":true,"contentSummary":"5\u6708\u4efd\u73b0\u91d1\u6d41\u51fa7000000\uff0c\u662f\u5df2\u7ecf\u6d41\u51fa\u4e86\uff0c\u800c\u4f605\u6708\u521d\u53ea\u67094000000\uff0c\u6240\u4ee5\u5e94\u8be5\u662f5\u6708\u4efd\u5c31\u8981\u501f\u51653000000\uff0c\u53ef\u7b54\u6848\u4e2d\u4e3a\u4ec0\u4e48\u8bf4\u4e3a6\u6708\u4efd\u501f\u51653000000","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb55aeff242015b1eb557a70593","chapterId":"8a22ecb55b1ec7e9015b275991e4027f","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-1","courseName":"CMA Part I \u4e2d\u6587 \u57fa\u7840\u8bfe\uff08\u4e00\u6b65\u901a\u5173\uff09","chapterName":"\u77e5\u8bc6\u70b92 \u8425\u8fd0\u9884\u7b97--\u751f\u4ea7\u6210\u672c&\u9500\u8d27\u6210\u672c\u9884\u7b97","taskId":"8a22ecb55b1ec7e9015b280c515d0301","taskType":"video","taskprogress":"149","favoriteCount":"0","replyCount":"1","clickCount":"13","title":"\u9898\u76ee\u91cc\u7ed9\u7684\u662f\u672c\u6708\u9500\u552e\u91cf\uff0c\u4e0d\u662f\u672c\u6708\u751f\u4ea7\u91cf","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53261","uid":"36735","soundPath":" ","soundlen":"0","updateTime":"1494041251","clientType":"iphone","content":"\u8ba1\u7b97\u539f\u6750\u6599\u91c7\u8d2d\u91cf\u7684\u65f6\u5019\uff0c\u4e0d\u90fd\u662f\u7528\u751f\u4ea7\u4ea7\u91cf\u9884\u6d4b\u8ba1\u7b97\u7684\u5417\uff0c\u8fd9\u91cc\u7ed9\u51fa\u7684\u662f\u9500\u552e\u91cf\uff0c\u96be\u9053\u8fd9\u9898\u9ed8\u8ba4\u4e86\u8fd9\u91cc\u7684\u9500\u552e\u91cf\u5c31\u7b49\u4e8e\u751f\u4ea7\u4ea7\u91cf\uff1f","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"\/upload\/2017\/05\/06\/A564B17589784C0DA82120927470DC08.jpg","userlevel":1,"userlevelid":"101","nikeName":"\u79e6\u5b5f\u96ea","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55b291d17015b559eb8871744","isdelete":0,"id":"40122","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55b291d17015b559eb8871744.jpg","contentHtml":"\u8ba1\u7b97\u539f\u6750\u6599\u91c7\u8d2d\u91cf\u7684\u65f6\u5019\uff0c\u4e0d\u90fd\u662f\u7528\u751f\u4ea7\u4ea7\u91cf\u9884\u6d4b\u8ba1\u7b97\u7684\u5417\uff0c\u8fd9\u91cc\u7ed9\u51fa\u7684\u662f\u9500\u552e\u91cf\uff0c\u96be\u9053\u8fd9\u9898\u9ed8\u8ba4\u4e86\u8fd9\u91cc\u7684\u9500\u552e\u91cf\u5c31\u7b49\u4e8e\u751f\u4ea7\u4ea7\u91cf\uff1f","isdisplay":true,"contentSummary":"\u8ba1\u7b97\u539f\u6750\u6599\u91c7\u8d2d\u91cf\u7684\u65f6\u5019\uff0c\u4e0d\u90fd\u662f\u7528\u751f\u4ea7\u4ea7\u91cf\u9884\u6d4b\u8ba1\u7b97\u7684\u5417\uff0c\u8fd9\u91cc\u7ed9\u51fa\u7684\u662f\u9500\u552e\u91cf\uff0c\u96be\u9053\u8fd9\u9898\u9ed8\u8ba4\u4e86\u8fd9\u91cc\u7684\u9500\u552e\u91cf\u5c31\u7b49\u4e8e\u751f\u4ea7\u4ea7\u91cf\uff1f","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb55aeff242015b1eb557a70593","chapterId":"8a22ecb55b1ec7e9015b275870030277","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-1","courseName":"CMA Part I \u4e2d\u6587 \u57fa\u7840\u8bfe\uff08\u4e00\u6b65\u901a\u5173\uff09","chapterName":"\u77e5\u8bc6\u70b92 \u589e\u91cf\u3001ZBB\u3001\u6eda\u52a8\u3001\u5f39\u6027","taskId":"8a22ecb55b1ec7e9015b280ac4cc02fc","taskType":"video","taskprogress":"496","favoriteCount":"0","replyCount":"1","clickCount":"10","title":"\u89e3\u9898\u601d\u8def","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53259","uid":"36735","soundPath":" ","soundlen":"0","updateTime":"1494036247","clientType":"iphone","content":"\u8fd9\u9898\u4e3a\u4ec0\u4e48\u4e0d\u662f\u628a55000\u5143\u7684\u914c\u91cf\u56fa\u5b9a\u6210\u672c\u5206\u621040000\u5143\u7684\u5e7f\u544a\u8d39\u548c15000\u5143\u7684\u57f9\u8bad\u8d39\uff0c\u8fd9\u6837\u603b\u7684\u6210\u672c\u6548\u76ca\u6bd4\u89c6\u9891\u4e2d\u5927\u3002","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"\/upload\/2017\/05\/06\/AA65133FD7514EA395C56AB4C52B2C63.jpg","userlevel":1,"userlevelid":"101","nikeName":"\u79e6\u5b5f\u96ea","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55b291d17015b559eb8871744","isdelete":0,"id":"40120","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55b291d17015b559eb8871744.jpg","contentHtml":"\u8fd9\u9898\u4e3a\u4ec0\u4e48\u4e0d\u662f\u628a55000\u5143\u7684\u914c\u91cf\u56fa\u5b9a\u6210\u672c\u5206\u621040000\u5143\u7684\u5e7f\u544a\u8d39\u548c15000\u5143\u7684\u57f9\u8bad\u8d39\uff0c\u8fd9\u6837\u603b\u7684\u6210\u672c\u6548\u76ca\u6bd4\u89c6\u9891\u4e2d\u5927\u3002","isdisplay":true,"contentSummary":"\u8fd9\u9898\u4e3a\u4ec0\u4e48\u4e0d\u662f\u628a55000\u5143\u7684\u914c\u91cf\u56fa\u5b9a\u6210\u672c\u5206\u621040000\u5143\u7684\u5e7f\u544a\u8d39\u548c15000\u5143\u7684\u57f9\u8bad\u8d39\uff0c\u8fd9\u6837\u603b\u7684\u6210\u672c\u6548\u76ca\u6bd4\u89c6\u9891\u4e2d\u5927\u3002","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22cd47470045","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b93 \u5438\u6536\u6210\u672c\u6cd5\u4e0e\u53d8\u52a8\u6210\u672c\u6cd5","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"13","title":"\u4e3a\u4ec0\u4e48","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53254","uid":"35553","soundPath":" ","soundlen":"0","updateTime":"1493995548","clientType":"pc","content":"","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"http:\/\/static.caicui.com\/\/upload\/2017\/05\/05\/0175B9211CD84095A07A27C1B0A2E4F2.png,","userlevel":1,"userlevelid":"101","nikeName":"jiangtongrui","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55afe3d1d015b099cb8365590","isdelete":0,"id":"40117","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55afe3d1d015b099cb8365590.jpg","contentHtml":"<p><br><img src=\"http:\/\/static.caicui.com\/\/upload\/2017\/05\/05\/0175B9211CD84095A07A27C1B0A2E4F2.png\" width=\"689\" height=\"354\"><\/p>","isdisplay":true,"contentSummary":"","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22cd47470045","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b93 \u5438\u6536\u6210\u672c\u6cd5\u4e0e\u53d8\u52a8\u6210\u672c\u6cd5","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"16","title":"B\u9009\u9879\u7684\u610f\u601d\u4e0d\u592a\u7406\u89e3","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53234","uid":"35553","soundPath":" ","soundlen":"0","updateTime":"1493989154","clientType":"pc","content":"","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"http:\/\/static.caicui.com\/\/upload\/2017\/05\/05\/75532658DA26423FB2BA80218DCB5DE7.png,","userlevel":1,"userlevelid":"101","nikeName":"jiangtongrui","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55afe3d1d015b099cb8365590","isdelete":0,"id":"40112","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55afe3d1d015b099cb8365590.jpg","contentHtml":"<p><br><img src=\"http:\/\/static.caicui.com\/\/upload\/2017\/05\/05\/75532658DA26423FB2BA80218DCB5DE7.png\" width=\"452\" height=\"175\"><\/p>","isdisplay":true,"contentSummary":"","del_permission":0},{"categoryId":"ff808081486933e601489c4662f60851","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"undefined","categoryName":"CMA\u4e2d\u6587","subjectName":"CMA \u4e2d\u6587 Part-1","courseName":"CMA Part I \u4e2d\u6587 \u57fa\u7840\u8bfe","chapterName":"undefined","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"10","title":"\u5e94\u8be5\u505a\u4ec0\u4e48\u9898","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"0","taskCurrent":"0","pid":"53218","uid":"35553","soundPath":" ","soundlen":"0","updateTime":"1493972804","clientType":"apad","content":"\u8001\u5e08\uff0c\u65e2\u7136wiley\u9898\u5e93\u4e2d\u7684\u9898\u8fc7\u65f6\u4e86\uff0c\u90a3\u6211\u9664\u4e86\u505a\u8d22\u8403\u7f51\u7684\u9898\u8fd8\u5e94\u8be5\u505a\u4ec0\u4e48\u9898\u5462\uff0c\u8001\u5e08\u6709\u4ec0\u4e48\u63a8\u8350\u5417","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"jiangtongrui","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55afe3d1d015b099cb8365590","isdelete":0,"id":"40108","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55afe3d1d015b099cb8365590.jpg","contentHtml":"\u8001\u5e08\uff0c\u65e2\u7136wiley\u9898\u5e93\u4e2d\u7684\u9898\u8fc7\u65f6\u4e86\uff0c\u90a3\u6211\u9664\u4e86\u505a\u8d22\u8403\u7f51\u7684\u9898\u8fd8\u5e94\u8be5\u505a\u4ec0\u4e48\u9898\u5462\uff0c\u8001\u5e08\u6709\u4ec0\u4e48\u63a8\u8350\u5417","isdisplay":true,"contentSummary":"\u8001\u5e08\uff0c\u65e2\u7136wiley\u9898\u5e93\u4e2d\u7684\u9898\u8fc7\u65f6\u4e86\uff0c\u90a3\u6211\u9664\u4e86\u505a\u8d22\u8403\u7f51\u7684\u9898\u8fd8\u5e94\u8be5\u505a\u4ec0\u4e48\u9898\u5462\uff0c\u8001\u5e08\u6709\u4ec0\u4e48\u63a8\u8350\u5417","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c799f0f0868","courseId":"8a22ecb5545a87e801545af5048c0006","chapterId":"8a22ecb55b1ec7e9015b22c134eb003d","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u77e5\u8bc6\u70b92 \u589e\u91cf\u3001ZBB\u3001\u6eda\u52a8\u3001\u5f39\u6027","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"17","title":"\u672c\u9898\u7b54\u6848\u662f\u5426\u9519\u8bef\uff1f","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"3","taskCurrent":"0","pid":"53124","uid":"36230","soundPath":" ","soundlen":"0","updateTime":"1493899361","clientType":"pc","content":"\u6309\u7167\u89e3\u6790\uff0c\u672c\u9898\u9009B\uff0c\u5e94\u8be5\u6ca1\u9519\u5427\uff1f","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"yaoyuefeng","is_avatar":"1","avatar_default":"0","memberId":"8a22ecb55b225943015b2396f424012e","isdelete":0,"id":"40075","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_8a22ecb55b225943015b2396f424012e.jpg","contentHtml":"<p>\u6309\u7167\u89e3\u6790\uff0c\u672c\u9898\u9009B\uff0c\u5e94\u8be5\u6ca1\u9519\u5427\uff1f<\/p>","isdisplay":true,"contentSummary":"\u6309\u7167\u89e3\u6790\uff0c\u672c\u9898\u9009B\uff0c\u5e94\u8be5\u6ca1\u9519\u5427\uff1f","del_permission":0},{"categoryId":" ","subjectId":"ff808081486933e601489c7a1aa20869","courseId":"8a22ecb5559bad0501559fe3297e0039","chapterId":"8a22ecb555d43efa0155ddb93eae003c","categoryName":" ","subjectName":" ","courseName":" ","chapterName":"\u7b2c\u4e00\u8282 \u57fa\u672c\u8d22\u52a1\u62a5\u8868","taskId":" ","taskType":" ","taskprogress":"0","favoriteCount":"0","replyCount":"1","clickCount":"9","title":"12\u9898\u600e\u4e48\u5f97\u5230C\u9009\u9879\u662f\u9519\u7684","denyReply":"false","toporder":"0","bestorder":"0","adpic":null,"fid":"41","taskCount":"5","taskCurrent":"0","pid":"53121","uid":"37610","soundPath":" ","soundlen":"0","updateTime":"1493894840","clientType":"pc","content":"\u901a\u8d27\u81a8\u80c0\u56e0\u7d20\u5bfc\u81f4\u7684\u9500\u552e\u589e\u52a0\u989d\uff0c\u9ad8\u4e8e\u901a\u8d27\u81a8\u80c0\u5bfc\u81f4\u7684\u4ea7\u54c1\u9500\u552e\u6210\u672c\u589e\u52a0\u989d","bbstype":"1","praiseCount":"0","replaytype":"0","imgPath":"","userlevel":1,"userlevelid":"101","nikeName":"wuleilei","is_avatar":"0","avatar_default":"0","memberId":"8a22ecb55b291bed015b9a0f98396b5e","isdelete":0,"id":"40072","levelimg":"\/upload\/usrlevel.png","headImg":"\/upload\/avatar\/big_0.png","contentHtml":"<p>\u901a\u8d27\u81a8\u80c0\u56e0\u7d20\u5bfc\u81f4\u7684\u9500\u552e\u589e\u52a0\u989d\uff0c\u9ad8\u4e8e\u901a\u8d27\u81a8\u80c0\u5bfc\u81f4\u7684\u4ea7\u54c1\u9500\u552e\u6210\u672c\u589e\u52a0\u989d<\/p>","isdisplay":true,"contentSummary":"\u901a\u8d27\u81a8\u80c0\u56e0\u7d20\u5bfc\u81f4\u7684\u9500\u552e\u589e\u52a0\u989d\uff0c\u9ad8\u4e8e\u901a\u8d27\u81a8\u80c0\u5bfc\u81f4\u7684\u4ea7\u54c1\u9500\u552e\u6210\u672c\u589e\u52a0\u989d","del_permission":0}],"state":"success","msg":""}
+//    var tpl = $('#tpl').html();
+//    var content = doT.template(tpl);
+//    $('#content').html(content(ret.data));
+      function getData(page) {
+          var param = {};
+          param.pageNo = page;
+          param.pageSize = pagesize;
+          param.self = 0;
+          param.ordertype = 1;
+          param.type = 3;
+          param.categoryId = api.pageParam.categoryId;
+          param.subjectId = api.pageParam.subjectId;
+          param.courseid = api.pageParam.course_id;
+          param.token = $api.getStorage('token');
+          if (page == 1 && show_pro && !is_loding) {
+              api.showProgress({
+                  title: '加载中',
+                  modal: false
+              });
+          }
+          ajaxRequest('api/studytools/bbslist/v1.0', 'get', param, function (ret, err) {//003.300.2
+              is_loding = true;
+              if (show_pro) {
+                  api.hideProgress();
+              }
+              if (err) {
+                  api.toast({
+                      msg: err.msg,
+                      location: 'middle'
+                  });
+                  return false;
+              }
+              var tpl = $('#tpl').html();
+              var content = doT.template(tpl);
+              if (ret && ret.state == 'success') {
+                  var str = '';
+                  if (ret.totalCount <= 0) {
+                      str = '<i class="icon-comment"></i>更多交流';
+                  } else {
+//                    str = '<i class="icon-comment"></i>更多交流（' + parseInt(ret.totalCount) + '）';
+					  str = '<i class="icon-comment"></i>更多交流';
+                  }
+                  $('.courseStudyMore').html(str);
+                  setTimeout(function () {
+                      var b_h = parseInt(api.winHeight - 255); //255是头部的高度,延时是为了准确得到内容的高度
+                      var w_h = $('.my-talk').height();
+                      if (w_h < b_h) {
+                          $('body').addClass('fix-btn');
+                      } else {
+                          $('body').removeClass('fix-btn');
+                      }
+                  }, 300);
+                  if (page == 1) {
+                      if (isEmpty(ret.data)) {
+                          $('body').addClass('null');
+                          return false;
+                      }
+                  }
+                  $('body').removeClass('null');
+                  $('#content').html(content(ret.data));
+                  audioDom();
+                  api.parseTapmode();
+              }
+              /*else {
+               api.toast({
+               msg: ret.msg,
+               location: 'middle'
+               });
+               }*/
+          });
+          setTimeout(function () {
+              $('.courseStudyMore').addClass('show');
+          }, 3000);
+      }
+      //点击关闭广告
+      function close_ad() {
+          $('.Advertisement').addClass('none');
+      }
+      function more(link) {
+          $('.current-talk').unbind();
+          var param = {};
+          param.tag = 1;
+          //param.categoryId = api.pageParam.categoryId;
+          //param.subjectId = api.pageParam.subjectId;
+          //param.course_id = api.pageParam.course_id;
+          param.course_id = api.pageParam.course_id;
+          param.chapterId = api.pageParam.chapterId;
+          param.chapterName = api.pageParam.chapterName;
+          param.courseName = api.pageParam.courseName;
+          param.categoryId = api.pageParam.categoryId;
+          param.subjectId = api.pageParam.subjectId;
+          param.subjectName = api.pageParam.subjectName;
+          param.categoryName = api.pageParam.categoryName;
+          api.openWin({
+              name: link,
+              url: link + '.html',
+              bgColor: '#fff',
+              opaque: true,
+              reload: true,
+              softInputMode: 'resize',
+              pageParam: param,
+              vScrollBarEnabled: false
+          });
+      }
+      /*
+       function to_detail(e){
+       var param = {
+       memberId: $(e).attr('memberId'),
+       id: $(e).data('id'),
+       categoryId: $(e).attr('categoryId'),//讨论id
+       subjectId: $(e).attr('subjectId'),
+       chapterId: $(e).attr('chapterId'),//章节id
+       qf: 'talk-detail',
+       taskId : $(e).attr('taskId'),
+       taskProgress : $(e).attr('taskProgress'),
+       taskType : $(e).attr('taskType')
+       };
+       api.openWin({
+       name: 'talk-detail',
+       url:'talk-detail.html',
+       bgColor: '#000',
+       opaque: true,
+       reload: true,
+       softInputMode: 'resize',
+       pageParam:param,
+       vScrollBarEnabled: false
+       });
+       }
+       */
+      function next(name, categoryId, subjectId, id, chapterId, memberId, taskId, taskProgress, taskType, courseId) {
+          categoryId = isEmpty(categoryId) || categoryId == undefined || categoryId == 'undefined' ? '证书Id' : categoryId;
+          subjectId = isEmpty(subjectId) || subjectId == undefined || subjectId == 'undefined' ? '科目id' : subjectId;
+          chapterId = isEmpty(chapterId) || chapterId == undefined || chapterId == 'undefined' ? '章节Id' : chapterId;
+          taskId = isEmpty(taskId) || taskId == undefined || taskId == 'undefined' ? '' : taskId;
+          taskProgress = isEmpty(taskProgress) || taskProgress == undefined || taskProgress == 'undefined' ? 0 : taskProgress;
+          taskType = isEmpty(taskType) || taskType == undefined || taskType == 'undefined' ? '' : taskType;
+          courseId = isEmpty(courseId) || courseId == undefined || courseId == 'undefined' ? '课程id' : courseId;
+          api.openWin({
+              name: name,
+              url: name + '.html',
+              bgColor: '#000',
+              opaque: true,
+              reload: true,
+              softInputMode: 'resize',
+              pageParam: {
+                  categoryId: categoryId,
+                  subjectId: subjectId,
+                  id: id,
+                  chapterId: chapterId,
+                  memberId: memberId,
+                  qf: 'talk-detail',
+                  taskId: taskId,
+                  taskProgress: taskProgress,
+                  taskType: taskType,
+                  courseId: courseId
+              },
+              vScrollBarEnabled: false
+          });
+      }
+      apiready = function () {
+          getData(1);
+          api.addEventListener({
+              name: 'talk_detail_lx'
+          }, function (ret) {
+              getData(1);
+          });
+          //编辑讨论刷新
+          api.addEventListener({
+              name: 'talk_detail_f_lx'
+          }, function (ret) {
+              getData(1);
+          });
+          //删除刷新
+          api.addEventListener({
+              name: 'my-talk-lx'
+          }, function (ret) {
+              getData(1);
+          });
+      };
+    </script>
+  </body>
+</html>

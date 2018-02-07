@@ -1,0 +1,31 @@
+extends ../layout/layout
+block head
+   title 缓存列表删除
+   link(rel='stylesheet', type='text/css', href='../css/cckt.css')
+block body
+   .row-sm
+      //头部
+      .header_jh
+         .hc_logo
+            i.zc_icon.icon-list-ul
+            img(src="../image/logo.png")
+      .col-left
+         -var liClass = 3
+         include ../modules/slider-menu
+      .col-right.col-right-jh
+         //-列表头
+         .hc_header
+            span 缓存列表
+            p.sc_r 批量删除
+         //-列表内容
+         //.hc_title
+         //   .sc_check
+         //      .sc_duigou.icon-check
+         //   i.icon-list-ul.sc_icon
+         //   span  第一章  ACCA F1  Accountant in Business
+         //   .progress.fix
+         //      .progress-bar(role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100")
+         //         p
+         //      //-span.sr-only 60%
+         ////- 折叠列表
+         //include ../modules/course-list

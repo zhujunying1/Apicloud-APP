@@ -1,0 +1,51 @@
+extends ../layout/layout
+block head
+    title 课程问答
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    .page-comment.page-reply
+        .s-head
+            .left
+                i.icon-back
+            .center  问答详情（已回复）
+        .s-main
+            .reply_detail
+                .detail_box
+                    .left_icon
+                        i.icon-img-bg
+                    .right_box
+                        .apply_name 佟云云
+                            .mes_box 25
+                                i.icon-replys
+                        .question_box 重庆工商大学的acca新生考试竞争大吗？
+                        .reply_box 重庆工商大学ACCA新生考试是从各个专业的新生之中报名选拔，参加英语笔试和面录取， 一届40-60 人，只要您好好准备，通过还是很有希望的。
+                        .add_question.cl
+                            .add_tit 问题补充:
+                            .add_con 贴吧很冷清，围观了几个月没看见大家有什么热烈的讨论
+                            .add_time 05-09  15:30
+                        .add_pic
+                            ul.cl
+                                -for(var i =0; i<2; i++)
+                                    li(id = 'am'+ i)
+                                        i.icon-img-bg
+                                        img(src='')
+                        .add_question.cl
+                            .add_tit 问题补充:
+                            .add_con 贴吧很冷清，围观了几个月没看见大家有什么热烈的讨论
+                            .add_time 05-09  15:30
+                        .reply_time 2015-05-09  15:30
+            .reply_detail.reply_con
+                .detail_box
+                    .left_icon
+                        i.icon-img-bg
+                    .right_box
+                        .apply_name 佟云云
+                        .question_box.question_box2 贴吧很冷清，围观了几个月没看见大家有什么热烈的讨论。作为一个作为一个作为企工作了4年多的小财务速度和佛山地方水电开发哈收到了法国
+                        .reply_time 2015-05-09  15:30
+        .reply_bottom
+            i.icon-picture2
+            i.icon-recording-o
+            .form-group
+                input.form-control(placeholder="输入回复...")
+            .publish_btn 发布
+

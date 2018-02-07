@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <title>财萃Pad</title>
+  </head>
+  <body>
+    <div class="signmain">
+      <ul class="form">
+        <li>
+          <input type="text" placeholder="手机号／用户名" name="username" class="input-txt">
+        </li>
+        <li>
+          <input type="password" placeholder="请输入密码" name="password" class="input-txt"><span tapmode="" onclick="forget()" class="forget">忘记密码?</span>
+        </li>
+        <li>
+          <input type="password" placeholder="再输入一次" name="repassword" class="input-txt">
+        </li>
+        <li class="clearfix">
+          <input type="text" placeholder="验证码" name="code" class="input-txt txt-validate"><img src="" alt="验证码" tapmode onclick="get_img()" class="validate-img">
+        </li>
+        <li>
+          <div tapmode="" onclick="bind()" class="btn btn-block">绑定</div>
+        </li>
+      </ul>
+    </div>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript">
+      //表单问题bug
+      $('.inputbug').click(function(){
+          $(".input-txt").unbind();
+      });
+      function get_img(){
+          var now = Date.now();
+          var img = common_url + '/api/v2.1/captcha?timestamp=' + now/1000;
+          $('.validate-img').attr('src', img);
+      }
+      function forget(){
+          $('input[name=password]').unbind();
+          api.openWin({
+              name : 'forgot_pass',
+              url : 'forgot_pass.html',
+              delay : 200,
+              pageParam:{'is_not':'1'}
+          });
+      }
+      function bind(){
+          var username= $.trim($('input[name=username]').val());
+          var password= $.trim($('input[name=password]').val());
+          var repassword= $.trim($('input[name=repassword]').val());
+          var code= $.trim($('input[name=code]').val());
+          if (username == '') {
+              api.toast({
+                  msg: '手机号／用户名不能为空',
+                  location: 'middle'
+              });
+              return false;
+          }
+          if(password==''){
+              api.toast({
+                  msg:'请输入密码',
+                  location:'middle'
+              });
+              return false;
+          }
+          if(repassword==''){
+              api.toast({
+                  msg:'请输入确认密码',
+                  location:'middle'
+              });
+              return false;
+          }
+          if(password!=repassword){
+              api.toast({
+                  msg: '两次密码不一致',
+                  location: 'middle'
+              });
+              return false;
+          }
+          if(code==''){
+              api.toast({
+                  msg: '请输入验证码',
+                  location: 'middle'
+              });
+              return false;
+          }
+          var outh=$api.getStorage('outh');
+          var param={
+              account:username,
+              token:$api.getStorage('token'),
+              j_captcha:code,
+              password:password,
+              societyType:outh.societyType,
+              societyId:outh.societyId
+          };
+          api.showProgress({
+              title: '处理中',
+              modal: true
+          });
+          set_token(function(res, error) {
+          if (res.state == 'success') {
+            $api.setStorage('token', res.data.token);
+            param.token = res.data.token;
+              ajaxRequest('api/v2.1/oauthBinding', 'post', param, function (ret, err) {//007.004 outh帐号绑定
+                  api.hideProgress();
+                  if (err) {
+                      get_img();
+                      api.toast({
+                          msg: err.msg,
+                          location: 'middle'
+                      });
+                      return false;
+                  }
+                  if (ret && ret.state == 'success') {
+                      $api.setStorage('token',ret.data.token);
+                      $api.setStorage('mine',ret.data);
+                      api.openWin({
+                          name: 'dashboard',
+                          url: 'dashboard.html',
+                          delay: 200
+                      });
+                      api.sendEvent({
+                          name:'to_ucenter'
+                      });
+                  } else {
+                      get_img();
+                      var msg=isEmpty(err_conf_007[ret.msg])  ? '' : err_conf_007[ret.msg];
+                      api.toast({
+                          msg: msg,
+                          location: 'middle'
+                      });
+                  }
+              });
+            }
+        })
+      }
+      apiready=function(){
+          get_img();
+      };
+    </script>
+  </body>
+</html>

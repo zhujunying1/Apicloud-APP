@@ -1,0 +1,25 @@
+extends ../layout/layout
+block html
+    -var htmlclass ='transparent'
+block body
+    ul.course-topnav#topnavf
+        li.active 学习课程
+        li 未激活课程
+        li 过期课程
+block scripts
+    script(type='text/javascript').
+        $('.course-topnav li').on('click', function () {
+            var i = $(this).index();
+            $(this).addClass('active').siblings().removeClass();
+            api.setFrameGroupIndex({
+                name: 'courseFrameGroup',
+                index: i
+            });
+        });
+        apiready = function () {
+            api.addEventListener({
+                name: 'hascoursenav'
+            }, function (ret) {
+                $('#topnavf li').removeClass().eq(ret.value.setnav).addClass('active');
+            });
+        };

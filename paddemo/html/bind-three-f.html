@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <title>财萃Pad</title>
+  </head>
+  <body>
+    <div onclick="open_img()" tapmode="" class="headPic js-WEqualH">
+      <div class="head"></div>
+    </div>
+    <div class="signmain">
+      <ul class="form">
+        <li>
+          <input name="nickname" type="text" placeholder="用户名" class="input-txt input-haspic"><span class="tm">可用于登录</span>
+          <input name="imgPath" type="hidden" value="">
+        </li>
+        <li>
+          <div onclick="next()" tapmode="" class="btn btn-block">开始</div>
+        </li>
+      </ul>
+    </div>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript">
+      var imgPath, height, width;
+      function open_img() {
+          var $body = $api.dom('body');
+          var width = $api.offset($body).w;
+          var bodyH = api.pageParam.bodyH;
+          api.openFrame({
+              name: 'sign-photo-f',
+              url: 'sign-photo-f.html',
+              opaque: false,
+              reload: true,
+              bgColor: "rgba(0,0,0,0.05)",
+              rect: {
+                  x: 0,
+                  y: 0,
+                  w: width,
+                  h: bodyH
+              }
+          });
+      }
+      function next() {
+          var nickname = $.trim($('input[name=nickname]').val());
+          if (nickname == '') {
+              api.toast({
+                  msg: '用户名不能为空',
+                  location: 'middle'
+              });
+              return false;
+          }
+          if (imgPath == '') {
+              api.toast({
+                  msg: '请上传头像',
+                  location: 'middle'
+              });
+              return false;
+          }
+          var obj = {};
+          obj.nickname = nickname;
+          obj.imgPath = imgPath;
+          obj.height = height;
+          obj.width = width;
+          obj.token = $api.getStorage('token');
+          api.showProgress({
+              title: '处理中',
+              modal: true
+          });
+          ajaxRequest('api/v2.1/cutAndSaveAvatar', 'post', obj, function (ret, err) {//007.012 完善用户信息
+              api.hideProgress();
+              if (err) {
+                  api.toast({
+                      msg: err.msg,
+                      location: 'middle'
+                  });
+                  return false;
+              }
+              if (ret && ret.state == 'success') {
+                 api.sendEvent({
+                     name:'to_ucenter'
+                 });
+                  return false;
+              } else {
+                  api.toast({
+                      msg: err_conf_007[ret.msg],
+                      location: 'middle'
+                  });
+              }
+          });
+      }
+      apiready = function () {
+          api.addEventListener({
+              name: 'photo_change'
+          }, function (ret, err) {
+              var value = ret.value;
+              imgPath = value.path;
+              $('.head').attr('src', static_url + value.path);
+              width = value.width;
+              height = value.height;
+          });
+      };
+    </script>
+  </body>
+</html>

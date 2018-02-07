@@ -1,0 +1,212 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'bg-white'
+block head
+    title 课程笔记-我的笔记
+block body
+    include ../modules/note-list
+block scripts
+    script(type="text/javascript").
+        function to_detail_top(e) {
+            var param = api.pageParam;
+            param.id = $(e).attr('data-id');
+            param.memberId=$(e).attr('data-uid');
+            param.isPublic=$(e).attr('isPub');
+            param.courseId = $(e).attr('data-key');
+            param.charpterid = isEmpty($(e).attr('charpterid')) || $(e).attr('charpterid') == 'undefined' ? 'charpterid' : $(e).attr('charpterid');
+            api.openFrame({
+                delay:200,
+                name: 'course-note-detail',
+                url: 'course-note-detail.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam: param,
+                bounces: false
+            });
+        }
+        var pageSize = 10;
+        function getData(page) {
+            var param = {};
+            param.pageSize = pageSize;
+            param.pageNo = page;
+            param.courseid = courseId;
+            param.categoryId = $api.getStorage('Course_info').categoryId;
+            param.subjectId = $api.getStorage('Course_info').subjectId;
+            param.charpterid = charpterid;
+            param.ordertype = 1;
+            param.self = 1;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/studytools/nodelist/v2.1', 'get', param, function (ret, err) {//003.113.1
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                var tpl = $('#tpl1').html();
+                var content = doT.template(tpl);
+                if (ret && ret.state == 'success') {
+                    no_loaded=false;
+                    total = ret.totalCount;
+                    if (page == 1) {
+                        if(isEmpty(ret.data)||total==0){
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        $('#content').html(content(ret.data));
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                    api.parseTapmode();
+                    audioDom();
+                    api.parseTapmode();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+        var total = 0;
+        var courseId = '';
+        var charpterid = '';
+        var no_loaded=true;
+        apiready = function () {
+            courseId=api.pageParam.courseId;
+            charpterid =api.pageParam.charpterid;
+            api.addEventListener({
+                name: 'chapter'
+            }, function (ret) {
+                courseId=ret.value.courseId;
+                charpterid = ret.value.charpterid;
+                getData(1);
+            });
+            api.addEventListener({//删除监听
+                name: 'chapter-notes-f'
+            }, function (ret) {
+                getData(1);
+            });
+            getData(1);
+            var currentPage = 1;
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+            }, function (ret, err) {
+                getData(1);
+                currentPage = 1;
+            });
+            //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (currentPage < Math.ceil(total / pageSize)) {
+                    currentPage++;
+                    getData(currentPage);
+                }
+                else {
+                    api.toast({
+                        msg: '加载完毕'
+                    });
+                }
+            });
+            api.addEventListener({
+                name: 'bjxq'
+            }, function (ret) {
+                getData(1);
+            });
+        };
+        //点击点赞
+//        function love(e) {
+//            var param = {};
+//            param.id = $(e).data('id');
+//            param.type = 'note';
+//            param.title = $(e).attr('data-co');
+//            param.userId = $(e).attr('data-uid');
+//            param.token = $api.getStorage('token');
+//            api.showProgress({
+//                title: '加载中..',
+//                model: false
+//            });
+//            ajaxRequest('api/studytools/commons/praise/v2.1', 'get', param, function (ret, err) {//003.001 点赞
+//                api.hideProgress();
+//                if (err) {
+//                    api.toast({
+//                        msg: err.msg,
+//                        location: 'middle'
+//                    });
+//                    return false;
+//                }
+//                if (ret && ret.state == 'success') {
+//                    var htm = parseInt($(e).siblings('.lo-me').html()) + 1;
+//                    $(e).siblings('.lo-me').html(htm);
+//                    api.toast({
+//                        msg: '点赞成功',
+//                        location: 'middle'
+//                    });
+//                    api.parseTapmode();
+//                }
+//                else {
+//                    api.toast({
+//                        msg: '点赞失败',
+//                        location: 'middle'
+//                    });
+//                }
+//            });
+//        }
+//                             //点击收藏
+//        function coll(e) {
+//            var id = $(e).data('id');
+//            var param = {};
+//            param.noteId = id;
+//            param.token = $api.getStorage('token');
+//            api.showProgress({
+//                title: '加载中..',
+//                model: false
+//            });
+//            ajaxRequest('api/v2/note/favorite', 'get', param, function (ret, err) {//003.117  笔记收藏
+//                api.hideProgress();
+//                if (err) {
+//                    api.toast({
+//                        msg: err.msg,
+//                        location: 'middle'
+//                    });
+//                    return false;
+//                }
+//                if (ret && ret.state == 'success') {
+//                    var htm = parseInt($(e).siblings('.co-me').html()) + 1;
+//                    $(e).siblings('.co-me').html(htm);
+//                    api.toast({
+//                        msg: '收藏成功',
+//                        location: 'middle'
+//                    });
+//                    api.parseTapmode();
+//                }
+//                else {
+//                    api.toast({
+//                        msg: '收藏失败',
+//                        location: 'middle'
+//                    });
+//                }
+//            });
+//        }

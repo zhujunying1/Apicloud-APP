@@ -1,0 +1,45 @@
+extends ../layout/layout
+block html
+    -var htmlclass = "course-buy"
+block body
+    .header.header-white
+        .left(tapmode,onclick="api.closeFrame()")
+            i.icon-back
+        .center 购买课程
+    ul.course-pic-list.buying#content
+        li.ios-link
+            a(href="tel:010-57188863")
+                p 咨询客服
+                h3 010-57188863
+    mixin lst
+        li(tapmode,onclick="")
+            .cpl-head(style="background-image:url({{=static_url+it[p].courseImgPath}})")
+                h4 {{=it[p].updateDate.split(' ')[0]}}
+            .cpl-main
+                .li
+                    h2 {{=it[p].title}}
+                .li.buy-info
+                    .left ￥{{=it[p].marketPrice}}
+                    //.right 已有213人观看
+                .li.lecturer
+                    dl
+                        img.avatar(src="{{=static_url+it[p].teacherHeadImg}}")
+                        dt {{=it[p].teacherName}}
+                        dd {{=it[p].ability}}
+                    .btn.btn-o(tapmode,onclick="buys('{{=it[p].id}}','{{=it[p].marketPrice}}')") 购买
+    script(id='tpl',type='text/x-dot-template')
+        |{{for(var p in it){ }}
+        +lst
+        |{{ } }}
+block scripts
+    script(type="text/javascript").
+        function init(){
+            var data=JSON.parse(api.pageParam.data);
+            var tpl = $('#tpl').html();
+            var content = doT.template(tpl);
+            $('#content').prepend(content(data));
+            api.parseTapmode();
+        }
+        apiready=function(){
+            init();
+        };

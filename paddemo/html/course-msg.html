@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="transparent">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <title>课程通知</title>
+    <style>
+        .pop-msg{
+            width: 5.6rem;
+            height: auto;
+            left:5.6rem;
+            top:5rem;
+        }
+        .pop-msg:before{
+            border-right-color: #fbfbfb;
+            border-bottom-color: transparent;
+            top: 0.4rem;
+            right: 0;
+            left: -0.5rem;
+        }
+        .pop-msg .examine_con{
+           overflow: initial;
+            white-space: normal;
+            text-overflow: initial;
+        }
+    </style>
+  </head>
+  <body>
+  <div class="pop-msg">
+      <div class="info_des">
+      <ul>
+        <li><img class="icon-img-bg">
+          <div class="info_examine">
+            <div class="examine_tit">
+              <div class="time_box"><span></span></div>
+            </div>
+            <div class="examine_con"></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    </div>
+    
+    <div tapmode onclick="api.closeFrame()" class="backdrop"></div>
+
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript">
+      apiready=function(){
+          //解决安卓位置偏移问题
+          if(api.systemType != 'ios'){
+              $(".pop-msg").css({"top":"4.6rem"})
+          }
+          $('.examine_tit').html(api.pageParam.sender);
+          $('.examine_con').html(api.pageParam.content);
+          $('.icon-img-bg').attr('src', !isEmpty(api.pageParam.headImg) ? static_url + api.pageParam.headImg : default_img);
+      };
+      
+    </script>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="course-buy">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <title>财萃Pad</title>
+  </head>
+  <body>
+    <div class="header header-white">
+      <div tapmode onclick="api.closeFrame()" class="left"><i class="icon-back"></i></div>
+      <div class="center">购买课程</div>
+    </div>
+    <ul id="content" class="course-pic-list buying">
+      <li class="ios-link"><a style="top: 0.3rem;" href="tel:010-57188863">
+          <p>咨询客服</p>
+          <h3>010-57188863</h3></a></li>
+    </ul>
+    <script id="tpl" type="text/x-dot-template">{{for(var p in it){ }}
+          <li tapmode onclick="">
+            <div style="background-image:url({{=static_url+it[p].courseImgPath}})" class="cpl-head">
+              <h4>{{=it[p].updateDate.split(' ')[0]}}</h4>
+            </div>
+            <div class="cpl-main">
+              <div class="li" style="height: 1rem;">
+                <h2>{{=it[p].title}}</h2>
+              </div>
+              <div class="li buy-info" style="margin-top: -0.2rem;">
+                <div class="left">￥{{=it[p].marketPrice}}</div>
+                <!--.right 已有213人观看-->
+              </div>
+              <div class="li lecturer">
+                <!-- <dl><img src="{{=static_url+it[p].teacherHeadImg}}" class="avatar">
+                  <dt>{{=it[p].teacherName}}</dt>
+                  <dd>{{=it[p].ability}}</dd>
+                </dl> -->
+                <div tapmode onclick="buys('{{=it[p].id}}','{{=it[p].marketPrice}}')" class="btn btn-o">购买</div>
+              </div>
+            </div>
+          </li>{{ } }}
+    </script>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript">
+      function init(){
+          var data=JSON.parse(api.pageParam.data);
+
+          var tpl = $('#tpl').html();
+          var content = doT.template(tpl);
+          $('#content').prepend(content(data));
+          api.parseTapmode();
+      }
+      apiready=function(){
+          init();
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+mixin lst
+    dl.cont-list(id="li{{=it[p].id}}")
+        dt
+            img.avatar(src="{{=static_url+it[p].headImg}}")
+        dd
+            .link-box(tapmode, onclick="answerDetail(this)",courseId='{{=it[p].courseId}}',taskId='{{=it[p].taskId}}',data-id="{{=it[p].id}}",data-key="{{=it[p].memberId}}")
+                .name {{=it[p].nikeName}}
+                .title {{=it[p].title}}
+                .describe {{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}
+            | {{ if(!isEmpty(it[p].imgPath)) { }}
+            ul.pic-group
+                |{{ var imgPath=it[p].imgPath.split(','); }}
+                | {{ for(var i in imgPath) { }}
+                | {{if(i<=2) { }}
+                li(style="background-image:url({{=static_url+imgPath[i]}})", tapmode, onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')")
+                |{{ } }}
+                |{{ } }}
+                | {{if(imgPath.length>=3) { }}
+                b 共{{=imgPath.length}}张
+                | {{ } }}
+            | {{ } }}
+            .footer
+                .count
+                    i.icon-replys
+                    span {{=isEmpty(it[p].replyCount)?'0':it[p].replyCount }}
+                .time
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}} {{ } }}
+                .course-name
+                    | {{if(it[p].taskprogress && parseInt(it[p].taskprogress) && !isEmpty(it[p].taskType)){ }}
+                    .tag-video-time
+                        i.icon-play-o
+                        span {{=formatType(it[p].taskType,it[p].taskprogress)}}
+                    |{{ } }}
+                    |{{if(!isEmpty(it[p].coursename)) { }}
+                    span.course-tit  {{=it[p].coursename}}
+                    |{{ } }}
+
+script(id='tpl',type='text/x-dot-template')
+    | {{ for(var p in it){  }}
+    +lst
+    | {{ } }}

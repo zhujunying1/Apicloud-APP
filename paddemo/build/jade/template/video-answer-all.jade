@@ -1,0 +1,128 @@
+extends ../layout/layout
+block html
+    -var htmlclass = 'video-right'
+block head
+    title 课程问答-所有问答
+block body
+    #content
+    include ../modules/answer-list
+block scripts
+    script(type="text/javascript").
+
+        //打开详情
+        function answerDetail(obj) {
+            var courseId = $(obj).attr('courseId');
+            var taskId = $(obj).attr('taskId');
+            courseId = isEmpty(courseId) || courseId == undefined || courseId == 'undefined' ? '课程id' : courseId;
+            taskId = isEmpty(taskId) || taskId == undefined || taskId == 'undefined' ? '任务id' : taskId;
+            var param={};
+            param.id = $(obj).attr('data-id');
+            param.memberId = $(obj).attr('data-key');
+            param.courseId = courseId;
+            param.taskId = taskId;
+            param.lx = 'answer-detail';
+            api.openFrame({
+                delay:200,
+                name: 'video-answer-detail',
+                url: 'video-answer-detail.html',
+                rect: {
+                    x: api.winWidth / 2,
+                    y: 0,
+                    w: api.winWidth / 2,
+                    h: headLh
+                },
+                pageParam: param,
+                bounces: false,
+                bgColor: '#ffffff'
+            });
+        }
+        var pageNum = 10;
+        var total = '';
+        var no_loaded=true;
+        apiready = function () {
+            getData(1);
+            var currentPage = 1;
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                getData(1);
+            });
+            //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (currentPage < Math.ceil(total / pageNum)) {
+                    currentPage++;
+                    getData(currentPage);
+                } else {
+                    api.toast({
+                        msg: '加载完毕'
+                    });
+                }
+            });
+            //删除问答监听
+            api.addEventListener({
+                name: 'video-answer-detail'
+            }, function (ret, err) {
+                getData(1);
+            });
+        };
+        function getData(page) {
+            var param = {};
+            param.self = 0;
+            param.ordertype = 1;
+            param.pageNo = page;
+            param.pageSize = pageNum;
+            param.courseid = api.pageParam.courseId;
+            param.categoryId = $api.getStorage('Course_info').categoryId;
+            param.subjectId = $api.getStorage('Course_info').subjectId;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/studytools/questionlist/v2.1', 'get', param, function (ret, err) {//003.206 问题列表
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                var tpl = $('#tpl').html();
+                var content = doT.template(tpl);
+                if (ret && ret.state == 'success') {
+                    no_loaded = false;
+                    total = ret.totalCount;
+                    if (page == 1) {
+                        if (isEmpty(ret.data)||total==0) {
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        $('#content').html(content(ret.data));
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                    api.parseTapmode();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+                                 

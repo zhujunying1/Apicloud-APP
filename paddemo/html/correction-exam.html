@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html class="transparent set-info">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <title>试题纠错</title>
+    <style type="text/css">
+      .modal{
+          width: 10.8rem;
+          height: 12.6rem;
+      }
+
+      .modal textarea{
+          min-height: 3rem;
+      }
+      .pop-radios {
+          overflow: hidden;
+          padding: 0 0;
+          margin-top: 0.2rem;
+              margin-left: -0.1rem;
+      }
+      .pop-radios .pop-radio-label {
+          display: inline-block;
+          float: left;
+          margin-left: 30px;
+      }
+      .pop-radios .pop-radio-label .pop-radio {
+          display: inline-block;
+          position: relative;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          border: 1px solid #979797;
+          vertical-align: middle;
+      }
+      .pop-radios .pop-radio-label .pop-radio .pop-radio-round {
+          position: absolute;
+          top: 2px;
+          bottom: 0;
+          left: 2px;
+          right: 0;
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #fff
+      }
+      .pop-radios .pop-radio-label .pop-radio-span {
+          display: inline-block;
+          font-size: 0.25rem;
+          padding-left: 0.1rem;
+          font-weight: bold;
+          color: #666666;
+      }
+      .pop-radios .pop-radio-label.active .pop-radio .pop-radio-round {
+        background-color: #F5A623
+      }
+      .pop-textarea-content {
+          width: initial;
+          height: 195px;
+          border: 1px solid #E4E4E4;
+          padding: 20px;
+          margin: 0 20px;
+          background-color: #fff
+      }
+      .pop-tel {
+          width: 100%;
+          float: left;
+          color: #3E4E63;
+          margin-left: 0.4rem;
+          margin-top:10px;
+      }
+      .pop-tel .pop-input-tel {
+          width: 2.4rem;
+          height: 0.5rem;
+          border: 1px solid #E4E4E4;
+          padding: 10px;
+          outline: none;
+          font-size: 12px;
+          margin-left: 10px;
+          background-color: #fff
+      }
+      .feeback-but {
+           margin-top: 0; 
+      }
+      .feeback-textareaBox{
+          padding:0.2rem 0.4rem;
+          position: relative;
+          padding-bottom: 1rem;
+      }
+      .taskInfo{
+        width: 92.6%;
+        position: absolute;
+        bottom: 0.2rem;
+        line-height: 0.7rem;
+        border-top:1px solid #e5e7e7;
+        background: #fff;
+      }
+      .taskInfo p{
+
+        display: inline-block;
+      }
+      .taskInfo p:nth-child(1){
+        height: 0.5rem;
+        border: 1px solid #42b1ab;
+        border-radius: 5px;
+        margin-top: 0.2rem;
+        margin-left: 0.1rem;
+      }
+      .taskInfo p:nth-child(2){
+          color: #666666;
+          font-size: 0.22rem;
+          font-weight: bold;
+          max-height: 0.8rem;
+          margin-left: 0.1rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 66%;
+          padding-top: 0.1rem;
+          margin-top: -0.4rem;
+      }
+      .taskInfo-time span{
+        display: inline-block;
+        font-size:0.26rem;
+      }
+      .taskInfo-time span:nth-child(1){
+          width: 0.5rem;
+          height: 100%;
+          background: #42b1ab;
+          border-radius: 3px;
+      }
+      .taskInfo-time span:nth-child(1):before{
+          content: "";
+          width: 0.26rem;
+          height: 0.26rem;
+          background: url(../image/exam.png) no-repeat;
+          background-size: 100% 100%;
+          position: absolute;
+          left: 0.22rem;
+          top: 0.32rem;
+      }
+      .taskInfo-time span:nth-child(2){
+          float: right;
+          padding: 0 0.1rem;
+          line-height: 0.5rem;
+          color: #666666;
+          font-size: 0.22rem;
+          font-weight: bold;
+      }
+      .taskInfo .taskInfo-title{
+          vertical-align: middle;
+      }
+      .modal .set_tit{
+          font-weight: bold;
+      }
+      .modal .set_tit .right{
+          width: 1rem;
+          height: 0.6rem;
+          border:1px solid #dedbdb;
+          border-radius: 5px;
+          background: #f2f0f0;
+          font-size: 0.27rem;
+          font-weight:bold;
+          color: #5c5c5c;
+          text-align: center;
+          line-height: 0.6rem;
+          position: absolute;
+          right: 0.4rem;
+          top:0.15rem;
+      }
+      .pop-tel div{
+          margin-right: 0.8rem;
+      }
+      .pop-tel div p{
+          display: inline-block;
+          width: 2.2rem;
+          height: 0.5rem;
+          border: 1px solid #42b1ab;
+          text-align: center;
+          line-height: 0.5rem;
+          color: #42b1ab;
+          font-weight: bold;
+          font-size: 0.26rem;
+      }
+      .pop-tel div p:nth-child(1){
+          margin-right: 0.4rem;
+      }
+      .pop-tel div p.active{
+          background: #42b1ab;
+          color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <div class="set-info-modal">
+      <div id="mask0" class="modal">
+        <div class="set_tit">试题纠错
+            <div tapmode onclick="api.closeFrame()" class="right">关闭</div>
+        </div>
+
+        <div id="pop-radios" class="pop-radios"><a href="javascript:;" class="pop-radio-label active"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">答案有异议</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">解析有误</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">错别字</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">排版错误</span></a>          <a href="javascript:;" class="pop-radio-label"><span class="pop-radio"><span class="pop-radio-round"></span></span><span class="pop-radio-span">其它错误</span></a></div>
+        <div class="feeback-textareaBox">
+          <textarea id="textarea" name="content" placeholder="请输入反馈，我们将为您不断改进。"></textarea>
+          <div class="taskInfo">
+              <p class="taskInfo-time"><span></span><span>1题</span></p>
+              <p class="taskInfo-title">任务3 战略规划概述</p>
+          </div>
+        </div>
+        <div class="pop-tel">联系方式
+          <input type="text" class="pop-input-tel">
+          <div class="right">
+            <p tapmode onclick="api.closeFrame()">取消</p>
+            <p class="active" tapmode onclick="sub()">提交</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+      $(function () {
+          $('body').attr('show', 'index');
+      });
+      function showAbout(){
+          $('body').attr('show','about');
+          $('.erweima').removeClass('xswx');
+      }
+      function togWx () {
+          $('.erweima').toggleClass('xswx');
+      }
+      
+      var is_notice;
+
+      function praise() {
+          var systemType = api.systemType;  // 比如: ios
+          if (systemType == 'ios') {
+              api.openApp({
+                  iosUrl: 'http://www.caicui.com/mc/examReport/add?token=' + $api.getStorage('token')
+              });
+          } else {
+              api.openApp({
+                  androidPkg: 'android.intent.action.VIEW',
+                  mimeType: 'text/html',
+                  uri: 'http://www.caicui.com/mc/examReport/add?token=' + $api.getStorage('token')
+              }, function (ret, err) {
+              });
+          }
+      }
+
+      apiready = function () {
+          
+          if(api.systemType != "ios"){
+              $(".modal").css({"width":"11.8rem"})
+          }
+          
+          var title = api.pageParam.task_info.title;
+          if(!isEmpty(api.pageParam.exam_info)){
+              title = api.pageParam.exam_info.title;
+          }
+          if(!isEmpty(api.pageParam.exam_id)){
+              title = api.pageParam.exam_id.title;
+          }
+          progress = api.pageParam.progress;//任务进度
+          $(".taskInfo-time").find("span").eq(1).html(progress+"题");
+          $(".taskInfo-title").html(title.replace(/\n|\r|\t|<[^<]*>/g,''));
+
+
+          //联系方式
+          ajaxRequest('api/zbids/member/getmemberinfo',"get", {"token":$api.getStorage('token')}, function (ret, error) {
+            if(error){
+                api.toast({
+                    msg:error.msg,
+                    location:'middle'
+                });
+                return false;
+            }
+            if(ret){
+              if(ret.data.mobile){
+                  $(".pop-input-tel").val(ret.data.mobile)
+              }else{
+                  $(".pop-input-tel").val(ret.data.email)
+              } 
+            }
+                           
+          })
+           //投诉类型
+          $('#pop-radios .pop-radio-label').on('click', function () {
+              $(this).addClass('active').siblings().removeClass('active');
+          });
+      
+          
+      
+          
+      };
+      
+
+      var is_ok = true;
+      var progress;
+      var exercise_id;
+      function sub() {
+        var content = $.trim($('textarea[name=content]').val());
+        if (content == '') {
+            api.toast({
+                msg: '意见内容不能为空',
+                location: 'middle'
+            });
+            return false;
+        }
+
+        var task_info_detail = api.pageParam.task_info_detail;
+        if(!isEmpty(api.pageParam.data_exercise_id)){
+            task_info_detail.taskInfo.id = api.pageParam.data_exercise_id;
+        }
+        var nameJson = {
+          "courseName" : task_info_detail.courseName,
+          "chapterName" : task_info_detail.chapterName,
+          "taskName" : task_info_detail.taskInfo.title,
+          "id" : task_info_detail.taskInfo.id
+        }
+        var courseId = task_info_detail.courseId;
+        var chapterId = task_info_detail.chapterId;
+        var taskId = task_info_detail.taskInfo.taskId;
+        var type = task_info_detail.taskInfo.taskType;
+        var title = task_info_detail.taskInfo.title.replace(/\n|\r|\t|<[^<]*>/g,'');
+        progress = progress;
+        var exam_id = api.pageParam.exam_id;
+        if(!isEmpty(exam_id)){
+            exercise_id = exam_id.id;
+            title = exam_id.title.replace(/\n|\r|\t|<[^<]*>/g,'');
+        }else{
+            exercise_id = task_info_detail.taskInfo.id;
+        }
+        //var title=content.substr(0,20);
+        var nickName = get_loc_val('mine', 'nickName');
+        var param = {};
+        var systype = api.systemType;
+        // param.contact = "来源:" + systype;
+        // param.content = content;
+        // param.title = 'ipad手机留言';
+        // param.nickName = nickName;
+        // param.token = $api.getStorage('token');
+        // 
+        
+        // test<a class="content-addDom" data-nameJson="{"courseName":"ACCA F1 Accountant in Business","chapterName":"Chapter 1 Organisation and Types of Organisation","taskName":"ACCA F1 Accountant in Business-CH1章节测评","id":"ff8080814b0bf92b014b1cc581a0357d"}" href="javascript:;" data-course-id="ff8080814dad5062014db32051b801a2" data-chapter-id="ff8080814dad5062014db32051d501a7" data-task-id="8a22ecb555a050580155a51484e70259" data-type="exam" data-sort="1" data-exercise-id="ff8080814b0bf92b014b1cc581a0357d" data-title="ACCA F1 Accountant in Business-CH1章节测评" >试题：1题</a>
+
+// console.log(JSON.stringify(task_info_detail))
+        param.memberId = getstor('memberId');//投诉人id
+        param.memberName = nickName;//投诉人昵称
+        param.cmptType = $(".pop-radio-label.active").find(".pop-radio-span").text();//投诉类型
+        param.cmptContent = content+'<a class="content-addDom" data-nameJson="'+JSON.stringify(nameJson)+'" href="javascript:;" data-course-id="'+courseId+'" data-chapter-id="'+chapterId+'" data-task-id="'+taskId+'" data-type="'+type+'" data-title="'+title+'" data-sort="'+progress+'" data-exercise-id="'+exercise_id+'"><试题：'+progress+'题></a>';//投诉内容
+        param.contactWay = $(".pop-input-tel").val();//联系方式
+        param.deviceDesc = systype;//设备描述
+        api.showProgress({
+            title: '发表中',
+            modal: true
+        });
+        
+        // console.log(JSON.stringify(param))
+        if (is_ok) {
+            is_ok = false;
+            ajaxRequest('api/business/complaintOpinion/create/v1.0', 'post', param, function (ret, err) {
+            //ajaxRequest('api/v2/lessonMessage/addLMG', 'post', param, function (ret, err) {//002.003 留言接口
+                api.hideProgress();
+                if (err) {
+                    is_ok = true;
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success') {
+                    api.showProgress({
+                        title: '谢谢您的反馈',
+                        modal: true
+                    });
+                    setTimeout(function () {
+                        api.hideProgress();
+                        api.closeFrame();
+                    }, 1000);
+                } else {
+                    is_ok = true;
+                    api.toast({
+                        msg: '发表失败，请重试！',
+                        location: 'middle'
+                    });
+                }
+            });
+        }
+      }
+                
+      var text = document.getElementById("textarea");
+      var autoTextarea = function (elem, extra, maxHeight) {
+          extra = extra || 0;
+          var isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
+                  isOpera = !!window.opera && !!window.opera.toString().indexOf('Opera'),
+                  addEvent = function (type, callback) {
+                      elem.addEventListener ?
+                              elem.addEventListener(type, callback, false) :
+                              elem.attachEvent('on' + type, callback);
+                  },
+                  getStyle = elem.currentStyle ? function (name) {
+                      var val = elem.currentStyle[name];
+                      if (name === 'height' && val.search(/px/i) !== 1) {
+                          var rect = elem.getBoundingClientRect();
+                          return rect.bottom - rect.top -
+                                  parseFloat(getStyle('paddingTop')) -
+                                  parseFloat(getStyle('paddingBottom')) + 'px';
+                      }
+                      return val;
+                  } : function (name) {
+                      return getComputedStyle(elem, null)[name];
+                  },
+                  minHeight = parseFloat(getStyle('height'));
+          elem.style.resize = 'none';
+          var change = function () {
+              var scrollTop, height,
+                      padding = 0,
+                      style = elem.style;
+              if (elem._length === elem.value.length) return;
+              elem._length = elem.value.length;
+              if (!isFirefox && !isOpera) {
+                  padding = parseInt(getStyle('paddingTop')) + parseInt(getStyle('paddingBottom'));
+              }
+              scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+              elem.style.height = minHeight + 'px';
+              if (elem.scrollHeight > minHeight) {
+                  if (maxHeight && elem.scrollHeight > maxHeight) {
+                      height = maxHeight - padding;
+                      style.overflowY = 'auto';
+                  } else {
+                      height = elem.scrollHeight - padding;
+                      style.overflowY = 'hidden';
+                  }
+                  style.height = height + extra + 'px';
+                  scrollTop += parseInt(style.height) - elem.currHeight;
+                  document.body.scrollTop = scrollTop;
+                  document.documentElement.scrollTop = scrollTop;
+                  elem.currHeight = parseInt(style.height);
+              }
+          };
+          addEvent('propertychange', change);
+          addEvent('input', change);
+          addEvent('focus', change);
+          change();
+      };
+      //autoTextarea(text);// 调用
+    </script>
+  </body>
+</html>

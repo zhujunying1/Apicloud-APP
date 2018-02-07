@@ -1,0 +1,169 @@
+extends ../layout/layout
+block head
+    title 未激活课程
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    ul.course-pic-list.noactive#content
+    include ../modules/course-pic-list
+block scripts
+    script(type='text/javascript').
+        function addiosLink(){
+            if (api.systemType == 'ios') {
+                $('.ios-link').remove();
+                $('#content').append('<li class="ios-link" tapmode onclick="toBuy()"><a>点击进入购买课程页面</a></li>');
+            }
+        }
+        var pageSize = 10;
+        function getData(page) {
+            var param = {};
+            param.pageNo = page;
+            param.pageSize = pageSize;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/v2.1/learning/noActivecourse', 'get', param, function (ret, err) {//008.001.1 未激活课程
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    addiosLink();
+                    return false;
+                }
+                var tpl = $('#tpl').html();
+                var content = doT.template(tpl);
+                if (ret && ret.state == 'success') {
+                    no_loaded = false;
+                    total = ret.data.total;
+                    if (page == 1) {
+                        if (isEmpty(ret.data)||total==0) {
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            addiosLink();
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        $('#content').html(content(ret.data.courselist));
+                    } else {
+                        $('#content').append(content(ret.data.courselist));
+                    }
+                    addiosLink();
+                    api.parseTapmode();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+                progressBar();
+            });
+        }
+        var total = 0;
+        var no_loaded=true;
+        apiready = function () {
+
+            getData(1);
+            var currentPage = 1;
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                getData(1);
+                currentPage = 1;
+            });
+                       //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (total == 0 || currentPage < Math.ceil(total / pageSize)) {
+                    currentPage++;
+                    getData(currentPage);
+                }
+            });
+            api.addEventListener({
+                name:'fresh_course'
+            },function(ret,err){
+                getData(1);
+            });
+        };
+
+        function toBuy(){
+            //获取内购项目列表
+            api.showProgress({
+                title: '加载中',
+                modal: false
+            });
+            var param={};
+            param.token=$api.getStorage('token');
+            param.userId=getstor('memberId');
+            param.pageNo=1;
+            param.pageSize=20;
+            ajaxRequest('api/v2.1/mobile/allList', 'post', param, function (ret, err) {//008.001.1 未激活课程
+                api.hideProgress();
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.isSuccess ==true) {
+                    api.openFrame({
+                        name: 'course-buy',
+                        url: 'course-buy.html',
+                        bgColor: 'rgba(0,0,0,0)',
+                        bounces: false,
+                        delay: 200,
+                        pageParam:{data:JSON.stringify(ret.result)}
+                    });
+                }else{
+                    api.alert({
+                        msg:'购买课程列表接口异常'
+                    });
+                }
+            });
+        }
+
+        function openCourse(co, ch, su, ca, cn) {
+        }
+
+        function openActivate(a,b,c,d,e,f,g,h,i,obj){
+            var param={};
+            param.courseName=a;
+            param.teacherName=b;
+            param.teacherHonor=c;
+            param.buyTime=d;
+            param.effectiveDay=e;
+            param.teacherImage=f;
+            param.isU=g;
+            param.courseId=h;
+            param.courseImg=i;
+            param.data=$(obj).find('span').siblings('.data').html();
+            api.openFrame({
+                delay: 200,
+                name: 'set-activate-course',
+                url: 'set-activate-course.html',
+                bgColor: 'rgba(0,0,0,0)',
+                bounces: false,
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: api.winWidth,
+                    h: api.winHeight
+                },
+                pageParam:param
+            });
+
+        }

@@ -1,0 +1,79 @@
+extends ../../layout/layout
+block html
+    -var htmlclass='set-info'
+block head
+    title 设置
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    .zhezhao_box
+    .tc_box
+        .set_tit 设置
+            i.icon-close
+        .set_user.equal_box
+            i.icon-img-bg
+            .user_nick Gentleman
+        .set_box1.equal_box
+            .set_list
+                ul
+                    li.cl
+                        .li-left 学习提醒
+                        .li-right
+                            .on-off.public_box
+                    li.cl
+                        .li-left 视频质量
+                        .li-right 普通
+                    li.cl
+                        .li-left 清理杂项缓存
+                        .li-right 35M
+        .set_box1.equal_box
+            .set_list
+                ul
+                    -var aN = ['意见反馈','关于财萃']
+                    each vN,ind in aN
+                        li.cl
+                            .li-left
+                                |#{vN}
+        .set_box1.equal_box
+            .set_list
+                ul
+                    li.cl
+                        .li-left.exit_login 退出登录
+        .zhezhao_box2.hide
+        .exit_choice.hide
+            .exit_cur 你确定要退出吗？
+            .ok_cancel.cl
+                .cancel 取消
+                .ok 确定
+
+block scripts
+    script.
+        $('html,body').css({background:'rgba(0,0,0,0.2)'});
+        $('body').on('touchend',function(){
+            api.closeFrame();
+        });
+        $('.tc_box').on('touchend',function(){
+            return false;
+        });
+        $('.on-off').on('touchend',function(){
+            if($(this).hasClass('public_box')){
+                $(this).addClass('private_box');
+                $(this).removeClass('public_box');
+            }
+            else{
+                $(this).addClass('public_box');
+                $(this).removeClass('private_box');
+            }
+        });
+        $('.exit_login').on('touchend',function(){
+            $('.zhezhao_box2').removeClass('hide');
+            $('.exit_choice').removeClass('hide');
+        });
+        $('.cancel').on('touchend',function(){
+            $('.zhezhao_box2').addClass('hide');
+            $('.exit_choice').addClass('hide');
+        });
+        $('.set_tit i').on('touchend',function(){
+            api.closeFrame();
+        })
+
+

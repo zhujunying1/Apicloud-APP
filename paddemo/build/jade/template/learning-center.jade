@@ -1,0 +1,177 @@
+extends ../layout/layout
+block head
+    title 学习中心
+    link(rel='stylesheet', type='text/css', href='../css/col-lg.css')
+block body
+    .dashboard
+        //第二部分
+        ul#course_content.das-top
+        mixin course
+            li(tapmode, onclick="CourseDetail('{{=data[p].courseId}}','{{=data[p].chapterId}}','{{=data[p].subjectID}}','{{=data[p].categoryId}}','{{=data[p].courseName}}','{{=data[p].chapterName}}','{{=data[p].subjectName}}','{{=data[p].categoryName}}')")
+                h1(style=" width: 100%;overflow:hidden;text-overflow :ellipsis;font-size: 0.28rem;padding-right:0.2rem;")
+                  | {{  if(!isEmpty(data[p].categoryName)) { }}
+                  | {{=data[p].categoryName}}
+                  | {{ } }}
+                  | {{=data[p].subjectName}}
+                h2 {{=data[p].courseName}}
+                | {{ if(!isEmpty(data[p].chapterName)){ }}
+                p 上次学到：{{=data[p].chapterName}}
+                | {{ }else{ }}
+                p 上次学到：您还没有学习记录
+                | {{ } }}
+                | {{ if(!isEmpty(data[p].showProgress) && !isEmpty(data[p].taskTotal)) { }}
+                .circle
+                    .circle-progress
+                        .val {{=parseInt((data[p].showProgress/data[p].taskTotal).toFixed(4)*100)>90 ?  100 :parseInt((data[p].showProgress/data[p].taskTotal).toFixed(4)*100) }}
+                    .num
+                        span {{=data[p].showProgress}}／
+                        b {{=data[p].taskTotal}}
+                | {{ }else{ }}
+                .circle
+                    .circle-progress
+                        .val 0
+                    .num
+                        span 0／
+                        b {{=data[p].taskTotal?data[p].taskTotal:0}}
+                    | {{ } }}
+            //第三部分
+        .content_three
+            .left
+                h1.section_tit 学习概况
+                .three_chart.cl
+                    .time_box
+                        .aver_time
+                            .circle_box
+                            | 平均时长
+                        .study_time
+                            .circle_box2
+                            | 我的学习时长
+                    .line_table
+                        canvas#canvasLine(style="width:100%;height:100%;")
+            .right
+                h1.section_tit 学时用时占比
+                .three_percent
+                    #graph(style="width:100%;height:100%;")
+                .explain
+                    ul#content-used.clearfix
+                    mixin list-used
+
+                        | {{for(var p in it.data) { }}
+                        |{{? p < 3}}
+                        li {{=it.data[p].label}} {{=((it.data[p].value/it.n).toFixed(2))*100}}%
+                            .circle_dot
+                        |{{? }}
+                        | {{ } }}
+
+                        | {{for(var p in it.data) { }}
+                        |{{? p >= 3}}
+                        li {{=it.data[p].label}} {{=((it.data[p].value/it.n).toFixed(2))*100}}%
+                            .circle_dot
+                        |{{? }}
+                        | {{ } }}
+            .left
+                h1.section_tit 能力评估
+                ul.abl_tit.cl
+                    li 财迷中排名第
+                        span.ranking 28
+                        | 位
+                    li 三天不做题
+                    li 等于没学习
+                .ability_box
+                    .leftbar
+                        ul.ring_box.cl#content_score
+                        mixin list-score
+                            | {{  if(!isEmpty(it)) { }}
+                            li
+                                .circle-progress
+                                    .val {{ if(isEmpty(it.total)) { }}0{{ }else{ }}{{=((it.total/it.total))*100}} {{ } }}
+                                p
+                                    span 共
+                                    b {{=isEmpty(it.total) ? 0 : it.total}}
+                                    span 题
+                            li
+                                .circle-progress
+                                    .val {{ if(isEmpty(it.total)) { }}0{{ }else{ }}{{=((it.error*100)/it.total).toFixed(0)}} {{ } }}
+                                p
+                                    b {{=isEmpty(it.error) ? 0 : it.error}}
+                                    span 错题
+                            li
+                                .circle-progress
+                                    .val {{ if(isEmpty(it.total)) { }}0{{ }else{ }}{{=(((it.total-it.error)*100/it.total).toFixed(0))}} {{ } }}
+                                p
+                                    span 答对
+                                    b {{=(it.total-it.error)}}
+                            | {{ } }}
+                    .rightbar
+                        ul#content_able
+                        mixin list-able
+                            | {{  if(!isEmpty(it)) { }}
+                            | {{ if(it.chapter!=undefined && it.chapter!=null && it.chapter!='undefined' && it.chapter!='null') { }}
+                            li
+                                .chapter_box 章节定向
+                                    .percent_box(s='{{=it.chapter}}') {{=it.chapter}}%
+                                .progress_line
+                                    .line_box
+                            | {{ } }}
+                            | {{ if(it.knowledgePoint!=undefined  && it.knowledgePoint!=null && it.knowledgePoint!='undefined'  && it.knowledgePoint!='null') { }}
+                            li
+                                .chapter_box 考试特训
+                                    .percent_box(s='{{=it.knowledgePoint}}') {{=it.knowledgePoint}}%
+                                .progress_line
+                                    .line_box.line_box2
+                            | {{ } }}
+                            | {{ if(it.intelligent!=undefined && it.intelligent!=null && it.intelligent!='undefined' && it.intelligent!='null') { }}
+                            li
+                                .chapter_box 职能组卷
+                                    .percent_box(s='{{=it.intelligent}}') {{=it.intelligent}}%
+                                .progress_line
+                                    .line_box.line_box3
+                            | {{ } }}
+                            | {{ if(it.simulated!=undefined && it.simulated!=null && it.simulated!='undefined' && it.simulated!='null') { }}
+                            li
+                                .chapter_box 模拟考试
+                                    .percent_box(s="{{=it.simulated}}") {{=it.simulated}}%
+                                .progress_line
+                                    .line_box.line_box4
+                            | {{ } }}
+                            | {{ if(it.real!=undefined && it.real!=null && it.real!='undefined' && it.real!='null') { }}
+                            li
+                                .chapter_box 真题重现
+                                    .percent_box(s='{{=it.real}}') {{=it.real}}%
+                                .progress_line
+                                    .line_box.line_box5
+                            | {{ } }}
+                            | {{ } }}
+            .right#content_error
+            mixin list-error
+                h1.section_tit 错题本
+                .des_error
+                    | 已消灭错题：
+                    span {{=it.correct}}
+                    | 道
+                .des_error.exit_error
+                    | 尚存余错题：
+                    span {{=it.leave}}
+                    | 道
+                //.cha_btn.cl
+                //    .cha_error.cur_btn(tapmode,onclick="next()") 查看错题
+                //    .beat_error.cur_btn(tapmode,onclick="next()") 消灭错题
+    script(id='tpl_course',type='text/x-dot-template')
+        | {{var data=it.courselist;}}
+        | {{ for(var p in data) { }}
+        +course
+        | {{ } }}
+    script(id='tpl_able',type='text/x-dot-template')
+        +list-able
+    script(id='tpl_score',type='text/x-dot-template')
+        +list-score
+    script(id='tpl_used',type='text/x-dot-template')
+        +list-used
+    script(id='tpl_error',type='text/x-dot-template')
+        +list-error
+block scripts
+    script(src='../script/jquery.js')
+    script(src='../script/Chart.js')
+    script(src='../script/morris.js')
+    script(src='../script/raphael-min.js')
+    script(src='../script/pagejs/learning-center.js')

@@ -1,0 +1,43 @@
+extends ../layout/layout
+block body
+    #header.header.header-black
+        .left(onclick='my_close()', tapmode='')
+            i.icon-arrow-left
+        .left-txt
+            | 找回密码
+        .right
+            | 1/2
+block scripts
+    script(type='text/javascript').
+        function my_close() {
+            api.setStatusBarStyle({
+                style: 'dark'
+            });
+            api.closeWin();
+        }
+        apiready = function() {
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            setTimeout(function(){
+                api.setStatusBarStyle({
+                    style: 'light'
+                });
+            },200);
+            var headerPos = $api.offset(header);
+            var width = api.winWidth;
+            var height = api.winHeight - headerPos.h;
+            api.openFrame({
+                name : 'forgot_pass',
+                url : 'forgot_pass_f.html',
+                bounces : false,
+                opaque : true,
+                reload : true,
+                vScrollBarEnabled : false,
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                }
+            });
+        };

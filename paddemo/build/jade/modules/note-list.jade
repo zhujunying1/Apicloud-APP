@@ -1,0 +1,137 @@
+#content
+mixin lst1
+    |{{ var memberId = get_loc_val('mine','memberId'); }}
+    |{{for(var p in it) { }}
+    |{{ if(it[p].memberId == memberId){ }}
+    dl.cont-list(id="li{{=it[p].id}}")
+        dt
+            img.left_icon.avatar(src="{{=static_url+it[p].headImg}}")
+        dd
+            .link-box(tapmode, onclick="to_detail_top(this)",isPub="{{=it[p].isPublic}}",data-uid="{{=it[p].memberId}}",data-id="{{=it[p].id}}",data-key="{{=it[p].courseId}}",charpterId='{{=it[p].charpterId}}',taskprogress='{{=it[p].taskprogress}}',taskType='{{=it[p].taskType}}',taskId='{{=it[p].taskId}}',coursename='{{=it[p].coursename}}',updateTime='{{=it[p].updateTime}}')
+                .name {{=it[p].nikeName}}
+                .describe {{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}
+            |{{if(!isEmpty(it[p].imgPath)) { }}
+            ul.pic-group
+                | {{var imgPath=it[p].imgPath.split(',');}}
+                | {{ for(var i in imgPath) { }}
+                | {{imgPath[i]=static_url+imgPath[i];}}
+                | {{if(i<=2) { }}
+                li(style="background-image:url('{{=imgPath[i]}}')", tapmode, onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')")
+                | {{ } }}
+                | {{ } }}
+                | {{ if(imgPath.length>=3) { }}
+                b 共{{=it[p].imgPath.split(',').length}}张
+                | {{ }}}
+            |{{ } }}
+            .footer
+                | {{if(it[p].isPublic == 0){ }}
+                .count
+                    i.icon-star
+                    span {{=isEmpty(it[p].favoriteCount)?'0':it[p].favoriteCount}}
+                    i.icon-thumb-up
+                    span {{=isEmpty(it[p].praiseCount)?'0':it[p].praiseCount}}
+                |{{ } }}
+
+                .time
+                    |{{if(it[p].isPublic == 0){ }}
+                    i.overt 公开
+                    |{{ } }}
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{ } }}
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}} {{ } }}
+
+                .course-name
+                    | {{if(it[p].taskprogress && parseInt(it[p].taskprogress) &&  !isEmpty(it[p].taskType)){ }}
+                    span.tag-video-time
+                        i.icon-play-o
+                        i {{=formatType(it[p].taskType,it[p].taskprogress)}}
+                    |{{ } }}
+                    span.course-tit {{=it[p].coursename}}
+
+    |{{ } }}
+    |{{ } }}
+script(id='tpl1',type='text/x-dot-template')
+    +lst1
+
+mixin lst2
+    | {{for(var p in it) { }}
+    | {{if(it[p].isPublic == 0){ }}
+    dl.cont-list(id="li{{=it[p].id}}")
+        dt
+            img.avatar(src="{{=static_url+it[p].headImg}}")
+        dd
+            .name {{=it[p].nikeName}}
+            .describe.link-box(tapmode, onclick="to_detail_top(this)",isPub="{{=it[p].isPublic}}",data-uid="{{=it[p].memberId}}",data-id="{{=it[p].id}}",data-key="{{=it[p].courseId}}",charpterId='{{=it[p].charpterId}}',taskprogress='{{=it[p].taskprogress}}',taskType='{{=it[p].taskType}}',taskId='{{=it[p].taskId}}',coursename='{{=it[p].coursename}}',updateTime='{{=it[p].updateTime}}') {{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}
+            | {{ if(!isEmpty(it[p].imgPath)) { }}
+            ul.pic-group
+                | {{var imgPath=it[p].imgPath.split(',');}}
+                | {{ for(var i in imgPath) { }}
+                | {{if(i<=2) { }}
+                li(style="background-image:url('{{=static_url+imgPath[i]}}')", tapmode, onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')")
+                | {{ } }}
+                | {{ } }}
+                | {{if(imgPath.length>=3) { }}
+                b 共{{=it[p].imgPath.split(',').length}}张
+                | {{ } }}
+            | {{ } }}
+            .footer
+                .count
+                    i.icon-star
+                    span {{=isEmpty(it[p].favoriteCount)?'0':it[p].favoriteCount}}
+                    i.icon-thumb-up
+                    span {{=isEmpty(it[p].praiseCount)?'0':it[p].praiseCount}}
+                .time
+                    i.overt 公开
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{ } }}
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}} {{ } }}
+                .course-name
+                    | {{if(it[p].taskprogress && parseInt(it[p].taskprogress) && !isEmpty(it[p].taskType)){ }}
+                    span.tag-video-time
+                        i.icon-play-o
+                        span {{=formatType(it[p].taskType,it[p].taskprogress)}}
+                    | {{ } }}
+                    span.course-tit  {{=it[p].coursename}}
+    | {{ } }}
+    | {{ } }}
+script(id='tpl2',type='text/x-dot-template')
+    +lst2
+mixin lst3
+    | {{for(var p in it) { }}
+    dl.cont-list(id="li{{=it[p].id}}")
+        dt
+            img.avatar(src="{{=static_url+it[p].headImg}}")
+        dd
+            .name {{=it[p].nikeName}}
+            .describe.link-box(tapmode, onclick="to_detail_top(this)",isPub="{{=it[p].isPublic}}",data-uid="{{=it[p].memberId}}",data-id="{{=it[p].id}}",data-key="{{=it[p].courseId}}",charpterId='{{=it[p].charpterId}}',taskprogress='{{=it[p].taskprogress}}',taskType='{{=it[p].taskType}}',taskId='{{=it[p].taskId}}',coursename='{{=it[p].coursename}}',updateTime='{{=it[p].updateTime}}') {{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}
+            | {{ if(!isEmpty(it[p].imgPath)) { }}
+            ul.pic-group
+                | {{var imgPath=it[p].imgPath.split(',');}}
+                | {{ for(var i in imgPath) { }}
+                | {{imgPath[i]=static_url+imgPath[i];}}
+                | {{if(i<=2) { }}
+                li(style="background-image:url('{{=imgPath[i]}}')", tapmode, onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')")
+                | {{ } }}
+                | {{ } }}
+                | {{if(imgPath.length>=3) { }}
+                b 共{{=it[p].imgPath.split(',').length}}张
+                | {{ } }}
+            | {{ } }}
+            .footer
+
+                | {{var uid = getstor('memberId');}}
+                | {{if(it[p].isPublic == 0){ }}
+                .count
+                    i.icon-star
+                    span {{=isEmpty(it[p].favoriteCount)?'0':it[p].favoriteCount}}
+                    i.icon-thumb-up
+                    span {{=isEmpty(it[p].praiseCount)?'0':it[p].praiseCount}}
+                | {{ } }}
+
+                .time
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{ } }}
+                    span {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}} {{ } }}
+                .course-name
+                    span.course-tit  {{=it[p].coursename}}
+    | {{ } }}
+script(id='tpl3',type='text/x-dot-template')
+    +lst3
+

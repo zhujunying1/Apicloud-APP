@@ -1,0 +1,98 @@
+extends ../layout/layout
+block head
+    title 课程笔记
+block body
+    .s-head
+        .left(tapmode, onclick="goChapter()")
+            i.icon-arrow-left
+            span 章节列表
+        .center
+            .btn-group.btn-success
+                .btn.active(tapmode='active', onclick="set_indes(0)") 大家的笔记
+                .btn(tapmode='active', onclick="set_indes(1)") 我的笔记
+
+        ul.right
+            li(tapmode, onclick="new_note()")
+                span 新建
+                i.icon-plus
+block scripts
+    script(type='text/javascript').
+        function new_note(){
+            api.openFrame({
+                delay:200,
+                name: 'course-note-edit',
+                url: 'course-note-edit.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth  - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam:api.pageParam,
+                bounces: false
+            });
+        }
+        function goChapter(){
+            api.closeFrameGroup({
+                name: 'noteFrameGroup'
+            });
+            api.setFrameGroupAttr({
+                name: 'chapterFrameGroup',
+                hidden: false
+            });
+            api.closeFrame();
+        }
+
+        function set_indes(a) {
+            api.setFrameGroupIndex({
+                name: 'noteFrameGroup',
+                index: a
+            });
+            $('.btn-group .btn').removeClass('active').eq(a).addClass('active');
+        }
+
+        apiready = function () {
+            api.setFrameGroupAttr({
+                name:'chapterFrameGroup',
+                hidden:true
+            });
+            var noteIndex;
+            //如果是从“我的”笔记章节列表跳过来
+            if(api.pageParam.notetype == 'me'){
+                noteIndex = 1;
+            }else{
+                noteIndex = 0;
+            }
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                api.closeFrameGroup({
+                    name: 'noteFrameGroup'
+                });
+                api.closeFrame();
+            });
+            api.openFrameGroup({
+                name: 'noteFrameGroup',
+                scrollEnabled: true,
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headSh
+                },
+                bgColor: '#fff',
+                index: noteIndex,
+                preload: 1,
+                frames: [{
+                    name: 'course-note-all',
+                    url: 'course-note-all.html',
+                    pageParam:api.pageParam
+                }, {
+                    name: 'course-note-me',
+                    url: 'course-note-me.html',
+                    pageParam:api.pageParam
+                }]
+            }, function (ret, err) {
+                $('.btn-group .btn').removeClass('active').eq(ret.index).addClass('active');
+            });
+        };

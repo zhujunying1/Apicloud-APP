@@ -1,0 +1,68 @@
+extends ../layout/layout
+block head
+    title 课程笔记
+block body
+    .s-head
+        .center
+            .btn-group.btn-success
+                .btn.active(tapmode='active', onclick="set_index(0)") 大家的笔记
+                .btn(tapmode='active', onclick="set_index(1)") 我的笔记
+        ul.right
+            li(tapmode, onclick="showSearchBar('note_search')")
+                i.icon-search2
+
+            li(tapmode, onclick="new_note()")
+                span 新建
+                i.icon-plus
+
+        include ../modules/search-bar
+block scripts
+    script(type='text/javascript').
+        function new_note(){
+            api.openFrame({
+                delay: 200,
+                name: 'course-note-edit',
+                url: 'course-note-edit.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth  - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam:api.pageParam,
+                bounces: false
+            });
+        }
+        function set_index(a) {
+            api.setFrameGroupIndex({
+                name: 'chapterFrameGroup',
+                index: a
+            });
+            $('.btn-group .btn').removeClass('active').eq(a).addClass('active');
+        }
+
+        apiready = function () {
+            api.openFrameGroup({
+                name: 'chapterFrameGroup',
+                scrollEnabled: true,
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headSh
+                },
+                index: 0,
+                preload: 0,
+                frames: [{
+                    name: 'course-note-chapter-all',
+                    url: 'course-note-chapter-all.html',
+                    pageParam:api.pageParam
+                }, {
+                    name: 'course-note-chapter-me',
+                    url: 'course-note-chapter-me.html',
+                    pageParam:api.pageParam
+                }]
+            }, function (ret, err) {
+                $('.btn-group .btn').removeClass('active').eq(ret.index).addClass('active');
+            });
+        };

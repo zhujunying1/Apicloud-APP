@@ -1,0 +1,299 @@
+extends ../layout/layout
+block html
+    -var htmlclass='cont-list-body'
+block head
+    title 课程讨论
+block body
+    #content
+    mixin lst
+        |{{if(!isEmpty(it[0].adpic)) { }}
+        .talk-img
+            img(src='{{=static_url+it[0].adpic}}')
+            i.icon-close(onclick="close_ad();")
+        |{{ } }}
+
+        |{{for(var p in it) { }}
+        |{{ if(!isEmpty(it[p].toporder)&&it[p].toporder){ }}
+        ul.list-nox
+            li
+                b 置顶
+                span {{=it[p].title}}
+        |{{ }else{ }}
+        dl.cont-list(id="li{{=it[p].id}}")
+            | {{if(!isEmpty(it[p].headImg)){ }}
+            dt
+                img.avatar(src="{{=static_url+it[p].headImg}}")
+            |{{ } }}
+            dd
+                .link-box(tapmode, onclick="next(this)",data-id='{{=it[p].categoryId}}',data-key='{{=it[p].chapterId}}',talk-id='{{=it[p].id}}',subjectId='{{=it[p].subjectId}}',data-val='{{=it[p].memberId}}',courseId='{{=it[p].courseId}}',taskId='{{=it[p].taskId}}',taskProgress='{{=it[p].taskProgress}}',taskType='{{=it[p].taskType}}')
+                    .name
+                        | {{=it[p].nikeName}}
+                        |{{if(it[p].levelimg){ }}
+                        img(src='{{=static_url+it[p].levelimg}}')
+                        |{{ } }}
+                    .title {{=it[p].title}}
+                    .describe {{=!isEmpty(it[p].contentSummary)?it[p].contentSummary:''}}
+                |{{ if(it[p].imgPath) { }}
+                ul.pic-group
+                    | {{ var imgPath=it[p].imgPath.split(','); }}
+                    | {{ for(var i in imgPath) { }}
+                    | {{if(i<=2) { }}
+                    li(style="background-image:url({{=static_url+imgPath[i]}})", tapmode, onclick="openImageBrower('{{=it[p].imgPath}}','{{=i}}')")
+                    |{{ } }}
+                    |{{ } }}
+                    | {{ if(imgPath.length>=3) { }}
+                    b 共{{=it[p].imgPath.split(',').length}}张
+                    | {{ } }}
+                |{{ } }}
+                .footer
+                    .count
+                        i.icon-replys
+                        span {{=isEmpty(it[p].replyCount)?'0':it[p].replyCount}}
+                    .time {{ if(!isEmpty(it[p].updateTime)) { }}{{=formatDate(it[p].updateTime,'Y')+'-'+formatDate(it[p].updateTime,'M')+'-'+formatDate(it[p].updateTime,'D')}} {{=formatDate(it[p].updateTime,'h')+':'+formatDate(it[p].updateTime,'m')}} {{} }}
+        |{{ } }}
+        |{{ } }}
+    script(id='tpl',type='text/x-dot-template')
+        +lst
+block scripts
+    script(type="text/javascript").
+        var pageSize = 10;
+        function getData(order_by,page) {
+            if (!isEmpty(api.pageParam.data)) {//接收从caicui.js发送来搜索结果的监听,用于第一次搜索结果重新给模板页面赋
+                aa = 1;
+                var data = api.pageParam.data;
+                total = data.key1.totalCount;
+                keyword = data.keyword;
+                var tpl = $('#tpl').html();
+                var content = doT.template(tpl);
+                if (isEmpty(data.key1.data)||total==0) {
+                    $('#content').html('');
+                    $('body').addClass('null');
+                    return false;
+                }
+                $('body').removeClass('null');
+                $('#content').html(content(data.key1.data));
+                no_loaded = false;
+                return false;
+            }
+            var param = {};
+            param.pageNo = page;
+            param.pageSize = pageSize;
+            param.courseid = $api.getStorage('Course_info').courseId;
+            param.categoryId = $api.getStorage('Course_info').categoryId;
+            param.subjectId = $api.getStorage('Course_info').subjectId;
+            param.self = 0;
+            param.ordertype = order_by;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/studytools/discusslist/v2.1', 'get', param, function (ret, err) {//003.300.2
+                if(show_pro&&no_loaded){
+                    api.hideProgress();
+                }
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success') {
+                    no_loaded=false;
+                    var tpl = $('#tpl').html();
+                    var content = doT.template(tpl);
+                        total = ret.totalCount;
+                    if (page == 1) {
+                        if (isEmpty(ret.data)||total==0) {
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        $('#content').html(content(ret.data));
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                    api.parseTapmode();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+                api.parseTapmode();
+            });
+            audioDom();
+        }
+        var order_by = 1;
+        var total = 0;
+        var aa='';//用于判断刷新和加载更多是否搜索页面的a==1是
+        var no_loaded=true;
+        apiready = function () {
+            api.addEventListener({
+                name: 'close_sort'
+            }, function (ret) {
+                if (ret && ret.value) {
+                    var typ = ret.value.typ;
+                    if (typ == 2) {
+                        return false;
+                    }
+                    var sort_name = ret.value.sort_name;
+                    switch (sort_name) {
+                        case '发帖时间':
+                            order_by = 1;
+                            break;
+                        case '最新回复':
+                            order_by = 2;
+                            break;
+                        case '回复数量':
+                            order_by = 3;
+                            break;
+                        case '精华讨论':
+                            order_by = 4;
+                            break;
+                    }
+                    getData(order_by, 1);
+                }
+            });
+            getData(order_by, 1);
+            api.addEventListener({
+                name: 'kc_talk_detail_f'
+            }, function (ret) {
+                getData(order_by, 1);
+            });
+            api.addEventListener({
+                name: 'course-edit-lx'
+            }, function (ret,err) {
+                getData(order_by, 1);
+            });
+            //            api.addEventListener({
+            //                name: 'my-talk-detail-sc'
+            //            }, function (ret) {
+            //                getData(order_by, 1);
+            //            });
+            api.addEventListener({
+                name: 'talk-edit-lx'
+            }, function (ret) {
+                getData(order_by, 1);
+            });
+            var currentPage = 1;
+            //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (aa == 1) {
+                    if (currentPage < Math.ceil(total / pageSize)) {
+                        currentPage++;
+                        no_loaded = false;
+                        get_dt(currentPage);
+                    } else {
+                        api.toast({
+                            msg: '加载完毕'
+                        });
+                    }
+                } else {
+                    if (currentPage < Math.ceil(total / pageSize)) {
+                        currentPage++;
+                        getData(currentPage);
+                    } else {
+                        api.toast({
+                            msg: '加载完毕'
+                        });
+                    }
+                }
+            });
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                if (aa == 1) {//发送监听到头部获取搜索类型、关键词，typ表示搜索页面的刷新还是加载更多
+                    no_loaded = true;
+                    get_dt(1);
+                } else {
+                    getData(order_by, 1);
+                }
+            });
+        };
+        //预览图片
+        function openImageBrower(arr, i) {
+            //图片浏览器打开
+            var obj = api.require('imageBrowser');
+            obj.openImages({
+                imageUrls: arr.split(','),
+                activeIndex: i
+            });
+        }
+        function next(obj) {
+            var param={};
+            var categoryId = isEmpty($(obj).attr('data-id')) || $(obj).attr('data-id') == undefined || $(obj).attr('data-id') == 'undefined' ? '证书Id' : $(obj).attr('data-id');
+            var subjectId = isEmpty($(obj).attr('subjectId')) || $(obj).attr('subjectId') == undefined || $(obj).attr('subjectId') == 'undefined' ? '科目id' : $(obj).attr('subjectId');
+            var chapterId = isEmpty($(obj).attr('data-key')) || $(obj).attr('data-key') == undefined || $(obj).attr('data-key') == 'undefined' ? '章节Id' : $(obj).attr('data-key');
+            param.taskProgress = isEmpty($(obj).attr('taskProgress')) || $(obj).attr('taskProgress') == undefined || $(obj).attr('taskProgress') == 'undefined' ? 0 : $(obj).attr('taskProgress');
+            param.taskType = isEmpty($(obj).attr('taskType')) || $(obj).attr('taskType') == undefined || $(obj).attr('taskType') == 'undefined' ? '' : $(obj).attr('taskType');
+            param.taskId = $(obj).attr('taskId');
+            param.subjectId = subjectId;
+            param.categoryId = categoryId;
+            param.chapterId = chapterId;
+            param.courseId = $(obj).attr('courseId');
+            param.memberId = $(obj).attr('data-val');
+            param.id = $(obj).attr('talk-id');
+            param.samll_talk = 'samll';
+            api.openFrame({
+                delay:200,
+                name: 'course-talk-detail',
+                url:  'course-talk-detail.html',
+                bgColor: 'rgba(0,0,0,0)',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headLh
+                },
+                pageParam: param,
+                bounces: false
+            });
+        }
+        //讨论搜索下一页与下拉刷新请求
+        function get_dt(page) {
+            var param = {};
+            param.token = $api.getStorage('token');
+            param.pageNo = page;
+            param.pageSize = 5;
+            param.keyWords = keyword;
+            param.findType=3;
+            ajaxRequest('api/studytools/findcontent/v2.1', 'get', param, function (ret, err) {//003.002 内容搜索
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success') {
+                    var tpl = $('#tpl').html();
+                    var content = doT.template(tpl);
+                    if (no_loaded) {
+                        $('#content').html(content(ret.data));
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+        function close_ad(){
+            $('.talk-img').addClass('none');
+        }

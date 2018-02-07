@@ -1,0 +1,225 @@
+extends ../layout/layout
+block head
+    title 课程笔记-大家的笔记
+block body
+    include ../modules/note-list
+block scripts
+    script(type='text/javascript').
+        function to_detail_top(e) {
+            var param = api.pageParam;
+            param.id = $(e).attr('data-id');
+            param.memberId=$(e).attr('data-uid');
+            param.isPublic=$(e).attr('isPub');
+            param.courseId = $(e).attr('data-key');
+            param.charpterid = isEmpty($(e).attr('charpterid')) || $(e).attr('charpterid') == 'undefined' ? 'charpterid' : $(e).attr('charpterid');
+            if(!isEmpty(api.pageParam)){
+                for(var p in api.pageParam){
+                    param[p]=api.pageParam[p];
+                }
+            }
+            api.openFrame({
+                delay: 200,
+                name: 'course-note-detail',
+                url: 'course-note-detail.html',
+                rect: {
+                    x: leftSw,
+                    y: headLh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight- headLh
+                },
+                pageParam: param,
+                bounces: false
+            });
+        }
+        function getData(page) {
+            if (!isEmpty(api.pageParam.data)) {//接收从caicui.js发送来搜索结果的监听,用于第一次搜索结果重新给模板页面赋值
+                aa = 1;
+                var data = api.pageParam.data;
+                total = data.key1.totalCount;
+                keyword = data.keyword;
+                var tpl = $('#tpl3').html();
+                var content = doT.template(tpl);
+                //if (data.page == 1) {
+                    if(isEmpty(data.key1.data)||total==0){
+                        $('#content').html('');
+                        $('body').addClass('null');
+                        return false;
+                    }
+                    $('body').removeClass('null');
+                    $('#content').html(content(data.key1.data));
+                     no_loaded = false;
+                return false;
+            }
+            var param = {};
+            param.pageSize = pageSize;
+            param.pageNo = page;
+            //param.courseid=api.pageParam.courseId;
+            //param.charpterid = api.pageParam.charpterid;
+            param.courseid=courseId;
+            param.categoryId = $api.getStorage('Course_info').categoryId;
+            param.subjectId = $api.getStorage('Course_info').subjectId;
+            param.charpterid = charpterid;
+            param.ordertype = 1;
+            param.self = 0;
+            param.token = $api.getStorage('token');
+            if(page==1&&show_pro&&no_loaded){
+                api.showProgress({
+                    title:'加载中',
+                    modal:false
+                });
+            }
+            ajaxRequest('api/studytools/nodelist/v2.1', 'get', param, function (ret, err) {//003.113.1
+                api.hideProgress();
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                var tpl = $('#tpl2').html();
+                var content = doT.template(tpl);
+                if (ret && ret.state == 'success') {
+                    no_loaded = false;
+                    total = ret.totalCount;
+                    if (page == 1) {
+                        if (isEmpty(ret.data)||total==0) {
+                            $('#content').html('');
+                            $('body').addClass('null');
+                            return false;
+                        }
+                        $('body').removeClass('null');
+                        $('#content').html(content(ret.data));
+                    } else {
+                        $('#content').append(content(ret.data));
+                    }
+                    api.parseTapmode();
+                    audioDom();
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }
+
+        var total = 0;
+        var pageSize = 10;
+        var aa='';//用于判断刷新和加载更多是否是搜索页面的a==1是
+        var courseId = '';
+        var charpterid = '';
+        var keyword = '';
+        var no_loaded=true;
+        apiready = function () {
+            courseId=api.pageParam.courseId;
+            charpterid = api.pageParam.charpterid;
+            getData(1);
+            api.addEventListener({
+                name: 'chapter'
+            }, function (ret) {
+                courseId=ret.value.courseId;
+                charpterid = ret.value.charpterid;
+                getData(1);
+            });
+            api.addEventListener({//删除监听
+                name: 'chapter-notes-f'
+            }, function (ret) {
+                getData(1);
+            });
+            api.addEventListener({//翻页的时候获取从caicui.js获取的下一页数据并追加
+                name:'load_data'
+            },function(ret){
+                aa = 1;
+                var data = ret.value;
+                total = data.key1.totalCount;
+                var tpl = $('#tpl3').html();
+                var content = doT.template(tpl);
+                $('#content').append(content(data.key1.data));
+            });
+            var currentPage = 1;
+                //滚动到底部
+            api.addEventListener({
+                name: 'scrolltobottom'
+            }, function (ret, err) {
+                if (aa == 1) {
+                    if (currentPage < Math.ceil(total / pageSize)) {
+                        currentPage++;
+                        no_loaded = false;
+                        get_dt(currentPage);
+                    } else {
+                        api.toast({
+                            msg: '加载完毕'
+                        });
+                    }
+                } else {
+                    if (currentPage < Math.ceil(total / pageSize)) {
+                        currentPage++;
+                        getData(currentPage);
+                    } else {
+                        api.toast({
+                            msg: '加载完毕'
+                        });
+                    }
+                }
+            });
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/arrow-down-o.png',
+                bgColor: '#f3f3f3',
+                textColor: '#787b7c',
+                textDown: '下拉更多',
+                textUp: '松开刷新',
+                showTime: false
+            }, function (ret, err) {
+                if (aa == 1) {
+                    no_loaded = true;
+                    get_dt(1);
+                } else {
+                    getData(1);
+                }
+            });
+            api.addEventListener({
+                name: 'bjxq'
+            }, function (ret) {
+                getData(1);
+            });
+            
+        };
+        //笔记搜索下一页与下拉刷新请求
+        function get_dt(page) {
+            var param = {};
+            param.token = $api.getStorage('token');
+            param.pageNo = page;
+            param.pageSize = 10;
+            param.keyWords = keyword;
+            param.findType=1;
+            api.showProgress({
+                title: '加载中',
+                modal: false
+            });
+            ajaxRequest('api/studytools/findcontent/v2.1', 'get', param, function (ret, err) {//003.002 内容搜索
+                api.hideProgress();
+                if (err) {
+                    api.toast({
+                        msg: err.msg,
+                        location: 'middle'
+                    });
+                    return false;
+                }
+                if (ret && ret.state == 'success') {
+                    var tpl = $('#tpl3').html();
+                    var content = doT.template(tpl);
+                    if(no_loaded){
+                        $('#content').html(content(ret.data));
+                    }else{
+                        $('#content').append(content(ret.data));
+                    }
+                } else {
+                    /*api.toast({
+                        msg: ret.msg,
+                        location: 'middle'
+                    });*/
+                }
+            });
+        }

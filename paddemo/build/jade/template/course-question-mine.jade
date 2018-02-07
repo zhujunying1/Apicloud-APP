@@ -1,0 +1,39 @@
+extends ../layout/layout
+block head
+    title 请选择课程
+block body
+    .header.header-white#header
+        .left(tapmode, onclick='closeMe()')
+            i.icon-back
+        .center 请选择课程
+block scripts
+    script(type="text/javascript").
+        function closeMe(){
+            api.closeFrame({
+                name: 'my-question-mine-f'
+            });
+            api.closeFrame();
+        }
+        apiready=function(){
+            api.openFrame({
+                delay:200,
+                name: 'course-question-mine-f',
+                url: 'course-question-mine-f.html',
+                rect: {
+                    x: leftSw,
+                    y: headSh,
+                    w: api.winWidth - leftSw,
+                    h: api.winHeight - headSh
+                },
+                pageParam:api.pageParam,
+                bounces: true
+            });
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                api.closeFrame({
+                    name: 'course-question-mine-f'
+                });
+                api.closeFrame();
+            });
+        };

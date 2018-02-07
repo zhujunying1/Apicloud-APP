@@ -1,0 +1,33 @@
+extends ../layout/layout
+block body
+    #header.header.header-black
+        .left(onclick='api.closeWin()', tapmode='')
+            i.icon-arrow-left
+        .left-txt
+            | 找回密码
+        .right
+            | 2/2
+block scripts
+    script(type='text/javascript').
+        apiready = function() {
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            var headerPos = $api.offset(header);
+            var width = api.winWidth;
+            var height = api.winHeight - headerPos.h;
+            api.openFrame({
+                name : 'forgot-pass2-f',
+                url : 'forgot-pass2-f.html',
+                bounces : false,
+                opaque : true,
+                reload : true,
+                vScrollBarEnabled : false,
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                },
+                pageParam:api.pageParam
+            });
+        };

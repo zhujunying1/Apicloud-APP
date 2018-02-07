@@ -1,0 +1,28 @@
+extends ../layout/layout
+block html
+    -var htmlclass = "transparent"
+block body
+    .backdrop.opacity(tapmode, onclick="api.closeFrame()")
+    ul.sort-menu
+        -var vs = ['最新回复','发帖时间','精华讨论','回复数量']
+        -var vb = ['new','time','num']
+        -each as, i in vs
+            li(tapmode, onclick="sortTalk('" + vs[i] + "')")=as
+
+block scripts
+    script(type="text/javascript").
+        apiready = function(){
+            api.addEventListener({
+                name: 'closeFrameAll'
+            }, function () {
+                api.closeFrame();
+            });
+        };
+        function sortTalk(obj){
+           var typ=api.pageParam.typ;
+            api.sendEvent({
+                name:'close_sort',
+                extra: {sort_name:obj,typ:typ}
+            });
+            api.closeFrame();
+        }

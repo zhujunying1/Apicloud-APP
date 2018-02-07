@@ -1,0 +1,22 @@
+extends ../layout/layout
+block head
+    title 未激活课程
+    link(rel='stylesheet', type='text/css', href='../css/cckt.css')
+block body
+    #mask
+        .setup
+            .setup_header.clearfix
+                .header_l
+                .header_r
+                .header_c 设置
+            .setup_touxiang
+                i
+                span Gentleman
+            ul.list
+                -for(var i =0; i<3; i++)
+                    li
+                        span 学习提醒
+                        p.right_btn.clearfix
+                        a.private_box
+
+block scripts

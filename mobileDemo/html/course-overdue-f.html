@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/common-component.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../css/caicui.css">
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.js"></script>
+    <link rel="stylesheet" href="../css/Sstyle.css">
+    <style>
+    	.courseTit{
+    		position: relative;
+		    width: 100%;
+		    height: 0.6rem;
+		     /*margin-top: 0.2rem;*/ 
+		    background: #f0f2f1;
+		     box-shadow: 0 -0.02px 2px #adadad; 
+		     color: #5e5e5e;
+    	}
+    	.courseTit.hide-child + .stydys{
+    		display: none;
+    	}
+    	
+    	.courseTit.hide-child .icon-arrow-top {
+		    -webkit-transform: rotate(180deg);
+		}
+		.courseTit .icon-arrow-top{
+    		transition: all 0.4s;
+    		position: absolute;
+    	}
+    	.courseTit-titLef{
+    		position: absolute;
+		    top: 50%;
+		    left: 0.3rem;
+		    height: 0.28rem;
+		    line-height: 0.28rem;
+		    -webkit-transform: translateY(-50%);
+		    font-size: 0.26rem;
+		    padding-left: 1.6%;
+    	}
+    	.courseTit-num{
+    		position: absolute;
+		    top: 50%;
+		    right:0.8rem;
+		    height: 0.28rem;
+		    line-height: 0.28rem;
+		    -webkit-transform: translateY(-50%);
+		    font-size: 0.3rem;
+		    padding-left: 0.6%;
+    	}
+    	.courseTit-num span{
+    		padding-right:0.2rem;
+    	}
+      .dueTime{
+          width: 56%;
+          height: 0.32rem;
+          line-height: 0.38rem;
+          font-size: 0.18rem;
+          color:#787878;
+      }
+      .courseStyTp .wod .wodTit{
+      	    height: 0.52rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script id="tpl" type="text/x-dot-template">{{for(var p in it.data){ }}
+    	<div class="courseTit" onclick="toggleCourse(this)" tapmode>
+		
+         <div class="courseTit-titLef">{{=it.data[p].subjectName}}</div>
+        
+          <div class="courseTit-num ri_h">课程<span>{{=it.data[p].courseLists.length}}</span><i class="icon-arrow-top"></i></div>
+        </div><div class="stydys">
+        
+        {{~it.data[p].courseLists:val:key}}
+          <div class="course-stydy">
+            <div class="courseStyTp clearfix"><img src="{{=static_url+val.courseBkImage}}" class="pic">
+              <ul class="wod">
+                <li class="wodTit">{{=val.courseName}}</li>
+                <!--li.hasTime 有效期：{{=formatDate(val.expirationTime,'Y')+'-'+formatDate(val.expirationTime,'M')+'-'+formatDate(val.expirationTime,'D')}}  {{=formatDate(val.expirationTime,'h')+':'+formatDate(val.expirationTime,'m')}}-->
+                <li class="dueTime">{{=formatDate(val.expirationTime,'Y')+'-'+formatDate(val.expirationTime,'M')+'-'+formatDate(val.expirationTime,'D')}}到期</li>
+               <!--  {{ if(!isEmpty(val.chapterName)){ }}
+                <li class="wodCot">上次学到：{{=val.chapterName}}</li>{{ } }} -->
+                {{ if(it.is_show==true) { }}
+	            {{if(val.isU==true){ }}
+	            <div class="courseStyBm clearfix">
+	              <div tapmode onclick="renew()" class="againBt">申请重听</div>
+	            </div>{{ }else { }}
+	            <div class="courseStyBm clearfix">
+	              <div tapmode onclick="api.toast({msg:'只有U+课程可以免费申请重听！',location:'middle'})" class="againBt">申请重听</div>
+	            </div>{{ } }}
+	            {{ } }}
+              </ul>
+            </div>
+          </div>
+          {{~}}
+          </div>
+          {{ } }}
+    </script>
+    <script type="text/javascript" src="../script/comm.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/caicui.js"></script>
+    <script type="text/javascript" src="../script/db.js"></script>
+    <script type="text/javascript" src="../script/saveTasksProgress.js"></script>
+    <script src="../script/sn_font640.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../script/pagejs/course-overdue-f.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>
